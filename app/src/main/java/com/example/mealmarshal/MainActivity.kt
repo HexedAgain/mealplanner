@@ -72,22 +72,6 @@ fun BottomNav() {
     ) { padding ->
         Text(text = "test", modifier = Modifier.padding(padding))
     }
-//    Scaffold() { padding ->
-//        BottomNavigation(
-//            modifier = Modifier.padding(padding),
-//        ) {
-////            NavigationBarItem(
-////                selected = false,
-////                onClick = { /*TODO*/ },
-////                icon = { Icon(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null) }
-////            )
-////            NavigationBarItem(
-////                selected = true,
-////                onClick = { /*TODO*/ },
-////                icon = { Icon(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null) }
-////            )
-//        }
-//    }
 }
 
 @Composable
