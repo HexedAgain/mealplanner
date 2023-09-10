@@ -2,6 +2,7 @@ package com.example.recipes.nav.di
 
 import com.example.core.navigation.BottomNavigationItem
 import com.example.recipes.nav.RecipesNavScreen
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,10 +11,8 @@ import dagger.multibindings.IntoSet
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RecipesNavModule {
-    @Provides
+abstract class RecipesNavModule {
+    @Binds
     @IntoSet
-    fun providesRecipesNavScreen(): BottomNavigationItem {
-        return RecipesNavScreen()
-    }
+    abstract fun providesRecipesNavScreen(recipesNavScreen: RecipesNavScreen): BottomNavigationItem
 }
