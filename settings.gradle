@@ -14,8 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "MealMarshal"
 include ':app'
-include ':feature'
-include ':feature:mylibrary'
 include ':feature:recipes'
 include ':feature:settings'
 include ':assets'

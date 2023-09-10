@@ -2,8 +2,8 @@ package com.example.recipes.nav
 
 import androidx.compose.runtime.Composable
 import com.example.core.navigation.BottomNavigationItem
-import com.example.recipes.ui.RecipiesScreen
 import com.example.assets.R
+import com.example.recipes.ui.RecipesScreen
 
 class RecipesNavScreen: BottomNavigationItem {
     override val navigationIconRes: Int = R.drawable.library_24
@@ -13,6 +13,6 @@ class RecipesNavScreen: BottomNavigationItem {
 
     @Composable
     override fun Content() {
-        RecipiesScreen()
+        RecipesScreen()
     }
 }
