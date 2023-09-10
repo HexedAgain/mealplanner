@@ -7,8 +7,13 @@ junit-version = "4.13.2"
 espresso-core-version = "3.5.1"
 ext-junit-version = "1.1.5"
 compose-navigation-verion = "2.7.2"
+hilt-compose-nav-version = "1.0.0"
+hilt-version = "2.44"
 
 #implementation 'androidx.navigation:navigation-compose:2.7.2'
+
+#implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+#implementation "com.google.dagger:hilt-android:2.44"
 
 [libraries]
 # compose
@@ -20,6 +25,11 @@ activity-compose = { module = "androidx.activity:activity-compose", version.ref 
 # compose preview
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-version"}
 compose-ui-manifest = { module = "androidx.compose.ui:ui-test-manifest"}
+
+# hilt
+hilt-compose-navigation = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hilt-compose-nav-version"}
+hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt-version" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt-version" }
 
 # androidx lifecycle
 androidx-lifecycle  = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle"}
@@ -40,3 +50,4 @@ androidx-navigation = { module = "androidx.navigation:navigation-compose", versi
 compose = ["compose-ui", "compose-ui-preview", "compose-material3", "activity-compose"]
 compose-preview = ["compose-ui-tooling", "compose-ui-manifest"]
 junit = ["junit", "junit-ext", "compose-ui-test-junit"]
+hilt = ["hilt", "hilt-compose-navigation"]

@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -20,9 +21,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.core.navigation.BottomNavigationItem
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
+import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import com.example.recipes.nav.RecipesNavScreen
 import com.example.settings.nav.SettingsNavScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +46,8 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun BottomNav() {
-    val bottomNavItems: List<BottomNavigationItem> = listOf(
-        RecipesNavScreen(),
-        SettingsNavScreen()
-    )
+fun BottomNav(mainScreenViewModel: MainScreenViewModel = hiltViewModel()) {
+    val bottomNavItems = mainScreenViewModel.bottomNavItems.toSortedSet { lhs, rhs -> lhs.navOrder.compareTo(rhs.navOrder) }
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {

@@ -9,6 +9,7 @@ class SettingsNavScreen: BottomNavigationItem {
     override val navigationIconRes: Int = R.drawable.settings_24
     override val navigationIconText: Int = R.string.bottom_nav_settings
     override val routeName: String = "Settings"
+    override val navOrder = 2
 
     @Composable
     override fun Content() {

@@ -10,6 +10,7 @@ class RecipesNavScreen: BottomNavigationItem {
     override val navigationIconText: Int = R.string.bottom_nav_recipes
 
     override val routeName: String = "Recipes"
+    override val navOrder = 1
 
     @Composable
     override fun Content() {
