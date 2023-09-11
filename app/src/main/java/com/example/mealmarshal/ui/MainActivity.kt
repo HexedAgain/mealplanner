@@ -10,9 +10,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -20,14 +24,21 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.core.navigation.BottomNavigationItem
+import com.example.core.navigation.Navigator
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import com.example.recipes.nav.RecipesNavScreen
 import com.example.settings.nav.SettingsNavScreen
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var navigator: Navigator
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,8 +48,25 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    BottomNav()
+                    BottomNav(navigator = navigator)
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun ListenForNavigationEvents(
+    navigator: Navigator,
+    navController: NavController
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    lifecycleOwner.lifecycleScope.launch {
+        navigator.eventChannel.consumeAsFlow().collect { action ->
+            when (action) {
+                is Navigator.NavAction.NAV_ROUTE -> navController.navigate(route = action.route)
+                Navigator.NavAction.NAV_UP -> navController.navigateUp()
+                Navigator.NavAction.NAV_BACK -> navController.popBackStack()
             }
         }
     }
@@ -46,7 +74,10 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun BottomNav(mainScreenViewModel: MainScreenViewModel = hiltViewModel()) {
+fun BottomNav(
+    navigator: Navigator,
+    mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+) {
     val bottomNavItems = mainScreenViewModel.bottomNavItems.toSortedSet { lhs, rhs -> lhs.navOrder.compareTo(rhs.navOrder) }
     val navController = rememberNavController()
     Scaffold(
@@ -93,5 +124,6 @@ fun BottomNav(mainScreenViewModel: MainScreenViewModel = hiltViewModel()) {
                 }
             }
         }
+        ListenForNavigationEvents(navigator = navigator, navController = navController)
     }
 }
