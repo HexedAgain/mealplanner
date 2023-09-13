@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="bottom_nav_recipes">Recipes</string>
+    <string name="bottom_nav_lab">Lab</string>
     <string name="bottom_nav_settings">Settings</string>
 </resources>

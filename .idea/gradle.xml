@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feature/lab" />
             <option value="$PROJECT_DIR$/feature/recipes" />
             <option value="$PROJECT_DIR$/feature/settings" />
           </set>

@@ -1,0 +1,22 @@
+plugins {
+    id 'com.android.library'
+}
+
+apply from: "../../config/plugins-common.gradle"
+apply from: "../../config/android-common.gradle"
+apply from: "../../config/dependencies-common.gradle"
+apply from: "../../config/dependencies-compose-common.gradle"
+
+android {
+    namespace 'com.example.lab'
+
+    defaultConfig {
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+}
+
+dependencies {
+    implementation project(path: ':core')
+    implementation project(path: ':assets')
+}
