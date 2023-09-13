@@ -1,8 +1,9 @@
-- Need to integrate Room database (4)
-  - Will be able to create new recipes (3)
+- Need to integrate Room database (5)
+  - Will be able to create new recipes (4)
   - Will be able to source recipes from file, or an external site
   - Will be able to share recipes
   - Will be able to plan weekly meal schedule
   - Will be able to define cost of ingredients
-- Need common typography (1)
-- Need to start introducing themes (2)
+- Need a TopAppBar class for nav screens to inherit (1)
+- Need to be able to hide the bottom nav bar (2)
+- Need to start introducing themes (3)
