@@ -4,4 +4,5 @@ interface BottomNavigationItem: NavigationItem {
     val navigationIconRes: Int
     val navigationIconText: Int
     val navOrder: Int
+    val isDialog: Boolean
 }

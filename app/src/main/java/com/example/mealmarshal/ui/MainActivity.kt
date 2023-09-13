@@ -13,22 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.core.navigation.BottomNavigationItem
+import androidx.navigation.compose.*
 import com.example.core.navigation.Navigator
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
-import com.example.recipes.nav.RecipesNavScreen
-import com.example.settings.nav.SettingsNavScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
@@ -119,8 +113,16 @@ fun BottomNav(
             modifier = Modifier.padding(padding)
         ) {
             bottomNavItems.forEach { navItem ->
-                composable(navItem.routeName) {
-                    navItem.Content()
+                if (navItem.isDialog) {
+                    dialog(
+                        route = navItem.routeName,
+                        dialogProperties = DialogProperties()) {
+                        navItem.Content()
+                    }
+                } else {
+                    composable(navItem.routeName) {
+                        navItem.Content()
+                    }
                 }
             }
         }

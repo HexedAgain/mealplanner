@@ -12,6 +12,7 @@ class RecipesNavScreen @Inject constructor(): BottomNavigationItem {
 
     override val routeName: String = "Recipes"
     override val navOrder = 1
+    override val isDialog = false
 
     @Composable
     override fun Content() {

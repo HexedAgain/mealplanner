@@ -11,6 +11,7 @@ class SettingsNavScreen @Inject constructor(): BottomNavigationItem {
     override val navigationIconText: Int = R.string.bottom_nav_settings
     override val routeName: String = "Settings"
     override val navOrder = 2
+    override val isDialog = false
 
     @Composable
     override fun Content() {
