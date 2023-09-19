@@ -1,7 +1,7 @@
 [versions]
 compose-version = "1.3.1"
 material3-version = "1.0.0-alpha11"
-core-ktx-version = "1.12.0" # not latest version (at time of writing its 1.12.0 but need api 34)
+core-ktx-version = "1.12.0"
 androidx-lifecycle = "2.3.1"
 junit-version = "4.13.2"
 espresso-core-version = "3.5.1"
@@ -9,6 +9,7 @@ ext-junit-version = "1.1.5"
 compose-navigation-verion = "2.7.2"
 hilt-compose-nav-version = "1.0.0"
 hilt-version = "2.44"
+room = "2.5.2"
 
 #implementation 'androidx.navigation:navigation-compose:2.7.2'
 
@@ -46,8 +47,15 @@ compose-ui-test-junit = { module = "androidx.compose.ui:ui-test-junit4", version
 # navigation
 androidx-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation-verion" }
 
+# room
+androidx-room-common = { module = "androidx.room:room-common", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room"}
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room"}
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
+
 [bundles]
 compose = ["compose-ui", "compose-ui-preview", "compose-material3", "activity-compose"]
 compose-preview = ["compose-ui-tooling", "compose-ui-manifest"]
 junit = ["junit", "junit-ext", "compose-ui-test-junit"]
 hilt = ["hilt", "hilt-compose-navigation"]
+room = ["androidx-room-common", "androidx-room-runtime", "androidx-room-ktx"]

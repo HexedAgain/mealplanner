@@ -3,20 +3,26 @@ plugins {
 }
 
 apply from: "../../config/plugins-common.gradle"
-apply from: '../../config/android-common.gradle'
+apply from: "../../config/android-common.gradle"
 apply from: "../../config/dependencies-common.gradle"
-apply from: "../../config/dependencies-compose-common.gradle"
 
 android {
-    namespace 'com.example.recipies'
+    namespace 'com.example.data.database'
 
     defaultConfig {
         consumerProguardFiles "consumer-rules.pro"
     }
+
+//    configurations {
+//        cleanedAnnotations
+//        implementation.exclude group: 'org.intellij.lang' , module:'annotations'
+//    }
 }
 
 dependencies {
     implementation project(path: ':core')
     implementation project(path: ':assets')
-    implementation project(path: ':domain')
+
+    implementation(libs.bundles.room)
+    kapt(libs.androidx.room.compiler)
 }
