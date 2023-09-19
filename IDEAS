@@ -1,0 +1,26 @@
+Use Google Firestore (or equivalent) to store recipes
+The app should be able to list recipes
+The app shold be able to search recipes by the following criteria:
+  - Exact name (or approx name)
+  - Ingredients (excluded and included + tolerance (i.e. accept maybe one missing ingredient, or add one ingredient))
+  - Time to cook
+  - Difficulty
+  - Price (this might have to be determined app side)
+  - Recipe author
+At each cooking step the app should raise a notification
+User should be able to add their own tags locally or maybe define their own difficulty rankings
+Recipes should be stored locally in a Room database (or other database)
+User should be able to amend a recipe locally
+User should be able to publish their own amendments as a new recipe, in addition to posting new recipes
+Need some way of providing images
+Need some way of serving audio only versions of these recipes, or otherwise dictating text in audio form
+App needs to define a set of ingredients, or this set needs to be stored remotely.
+  There shoul be the ability to update this set over time.
+The app will be able to present ingredient quantities in the users preferred metric system (i.e. convert lbs to kgs and so on...)
+Recipe schema:
+  [name], [name-also]*, [ingredients]*, [step]*, [step-time], [step-title], [step-body], [step-image/url], [step-appliances], [step-cookware]
+The currently active step should be a different colour to the other steps
+Would be nice if users could share by nearby p2p
+User should be able to plan a recipe schedule (i.e. food they will be eating this week)
+Maybe user can create recipes locally for free, access to database should be paid for (helps toward ongoing cost). Maybe the app defines a small set of recipes
+In app, each step should present a form allowing user to specifiy things like time, ingredients, etc ...
