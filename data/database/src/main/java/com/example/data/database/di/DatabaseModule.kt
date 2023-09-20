@@ -3,6 +3,7 @@ package com.example.data.database.di
 import android.content.Context
 import androidx.room.Room
 import com.example.data.database.core.AppDatabase
+import com.example.data.database.model.dao.RecipeDao
 import com.example.data.database.model.dao.StepDao
 import dagger.Module
 import dagger.Provides
@@ -32,5 +33,13 @@ class DatabaseModule {
         appDatabase: AppDatabase
     ): StepDao {
         return appDatabase.stepDao()
+    }
+
+    @Provides
+    @Singleton
+    fun providesRecipeDao(
+        appDatabase: AppDatabase
+    ): RecipeDao {
+        return appDatabase.recipeDao()
     }
 }

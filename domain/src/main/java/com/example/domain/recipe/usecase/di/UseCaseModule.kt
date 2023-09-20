@@ -1,7 +1,7 @@
-package com.example.domain.usecase.di
+package com.example.domain.recipe.usecase.di
 
-import com.example.domain.usecase.GetRecipesUseCase
-import com.example.domain.usecase.GetRecipesUseCaseImpl
+import com.example.domain.recipe.usecase.GetRecipesUseCase
+import com.example.domain.recipe.usecase.GetRecipesUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

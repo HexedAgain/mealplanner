@@ -2,12 +2,12 @@ plugins {
     id 'com.android.library'
 }
 
-apply from: "../config/plugins-common.gradle"
-apply from: "../config/android-common.gradle"
-apply from: "../config/dependencies-common.gradle"
+apply from: "../../config/plugins-common.gradle"
+apply from: "../../config/android-common.gradle"
+apply from: "../../config/dependencies-common.gradle"
 
 android {
-    namespace 'com.example.domain'
+    namespace 'com.example.data.repository'
 
     defaultConfig {
         consumerProguardFiles "consumer-rules.pro"
