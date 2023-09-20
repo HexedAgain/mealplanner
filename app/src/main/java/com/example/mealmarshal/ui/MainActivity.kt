@@ -3,7 +3,11 @@ package com.example.mealmarshal.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -110,7 +114,16 @@ fun BottomNav(
         NavHost(
             navController = navController,
             startDestination = bottomNavItems.first().routeName,
-            modifier = Modifier.padding(padding)
+            modifier = Modifier.padding(padding),
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                    animationSpec = tween(500)
+                )
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
         ) {
             bottomNavItems.forEach { navItem ->
                 if (navItem.isDialog) {
