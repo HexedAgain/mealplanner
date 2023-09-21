@@ -19,4 +19,5 @@ dependencies {
     implementation project(path: ':core')
     implementation project(path: ':assets')
     implementation project(path: ':data:database')
+    implementation project(path: ':data:repository')
 }

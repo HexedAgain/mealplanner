@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -14,13 +13,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
@@ -28,8 +24,6 @@ import com.example.core.navigation.Navigator
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,23 +47,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
-fun ListenForNavigationEvents(
-    navigator: Navigator,
-    navController: NavController
-) {
-    val lifecycleOwner = LocalLifecycleOwner.current
-    lifecycleOwner.lifecycleScope.launch {
-        navigator.eventChannel.consumeAsFlow().collect { action ->
-            when (action) {
-                is Navigator.NavAction.NAV_ROUTE -> navController.navigate(route = action.route)
-                Navigator.NavAction.NAV_UP -> navController.navigateUp()
-                Navigator.NavAction.NAV_BACK -> navController.popBackStack()
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun BottomNav(
@@ -78,6 +55,8 @@ fun BottomNav(
 ) {
     val bottomNavItems = mainScreenViewModel.bottomNavItems.toSortedSet { lhs, rhs -> lhs.navOrder.compareTo(rhs.navOrder) }
     val navController = rememberNavController()
+    ListenForNavigationEvents(navigator = navigator, navController = navController)
+
     Scaffold(
         bottomBar = {
             BottomAppBar {
@@ -118,11 +97,11 @@ fun BottomNav(
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(500)
+                    animationSpec = tween(300)
                 )
             },
             exitTransition = {
-                fadeOut(animationSpec = tween(500))
+                fadeOut(animationSpec = tween(100))
             }
         ) {
             bottomNavItems.forEach { navItem ->
@@ -139,6 +118,5 @@ fun BottomNav(
                 }
             }
         }
-        ListenForNavigationEvents(navigator = navigator, navController = navController)
     }
 }

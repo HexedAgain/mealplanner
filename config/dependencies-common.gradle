@@ -2,4 +2,9 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.bundles.hilt)
     kapt(libs.hilt.compiler)
+
+    // test ...
+//    testImplementation(libs.bundles.kotest)
+//    testImplementation(libs.junit5)
+//    testImplementation(libs.mockk)
 }
