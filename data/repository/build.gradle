@@ -22,25 +22,6 @@ dependencies {
     implementation project(path: ':assets')
     implementation project(path: ':data:database')
 
-////    implementation 'junit:junit:4.12'
-////    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.6.0'
-//    testImplementation 'junit:junit:4.+'
-////    testImplementation "io.kotest:kotest-assertions-core:5.0.1"
-////    testImplementation "io.kotest:kotest-property:5.0.1"
-////    testImplementation "io.kotest:kotest-runner-junit5:5.0.1"
-////    testImplementation "io.mockk:mockk:1.12.1"
     testImplementation(libs.bundles.kotest)
-////    testImplementation(libs.kotest.runner)
-////    testImplementation(libs.junit5)
-////    testImplementation(libs.mockk)
-////    testImplementation "io.kotest:kotest-assertions-core:$kotest_version"
-////    testImplementation "io.kotest:kotest-property:$kotest_version"
-////    testImplementation "io.kotest:kotest-runner-junit5:$kotest_version"
-////    testImplementation "io.mockk:mockk:1.12.1"
-//
-//    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    testImplementation(libs.bundles.junit5)
-    testImplementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
-    testImplementation 'junit:junit:4.13.2'
+    testImplementation(libs.mockk)
 }
