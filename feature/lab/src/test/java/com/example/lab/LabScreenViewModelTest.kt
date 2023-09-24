@@ -19,19 +19,19 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 @OptIn(ExperimentalCoroutinesApi::class)
 class LabScreenViewModelTest: MainDispatcherSpec() {
 
-    lateinit var viewModel: LabScreenViewModel
-    lateinit var usecaseFactory: InsertRecipeUseCaseFactory
-    lateinit var insertRecipeUseCase: InsertRecipeUseCase
-    lateinit var mockRecipeDao: MockRecipeDao
-    lateinit var mockDispatcher: TestDispatcher
-    lateinit var mockScope: CoroutineScope
+    private lateinit var viewModel: LabScreenViewModel
+    private lateinit var useCaseFactory: InsertRecipeUseCaseFactory
+    private lateinit var insertRecipeUseCase: InsertRecipeUseCase
+    private lateinit var mockRecipeDao: MockRecipeDao
+    private lateinit var mockDispatcher: TestDispatcher
+    private lateinit var mockScope: CoroutineScope
 
-    fun setupViewModel() {
+    private fun setupViewModel() {
         mockDispatcher = UnconfinedTestDispatcher()
         mockScope = CoroutineScope(mockDispatcher)
-        usecaseFactory = InsertRecipeUseCaseFactory(mockDispatcher)
-        insertRecipeUseCase = usecaseFactory.createForTest()
-        mockRecipeDao = usecaseFactory.repositoryFactory.recipeDao as MockRecipeDao
+        useCaseFactory = InsertRecipeUseCaseFactory(mockDispatcher)
+        insertRecipeUseCase = useCaseFactory.createForTest()
+        mockRecipeDao = useCaseFactory.repositoryFactory.recipeDao as MockRecipeDao
         viewModel = LabScreenViewModel(
             insertRecipeUseCase = insertRecipeUseCase
         )

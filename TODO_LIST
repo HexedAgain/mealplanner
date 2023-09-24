@@ -1,9 +1,9 @@
-- Need to integrate Room database (5)
-  - Will be able to create new recipes (4)
-  - Will be able to source recipes from file, or an external site
-  - Will be able to share recipes
-  - Will be able to plan weekly meal schedule
-  - Will be able to define cost of ingredients
-- Need a TopAppBar class for nav screens to inherit (1)
-- Need to be able to hide the bottom nav bar (2)
-- Need to start introducing themes (3)
+- Need UI to create a new recipe from Lab screen (1)
+- Will be able to create new recipes (5)
+- Will be able to source recipes from file, or an external site
+- Will be able to share recipes
+- Will be able to plan weekly meal schedule
+- Will be able to define cost of ingredients
+- Need a TopAppBar class for nav screens to inherit (2)
+- Need to be able to hide the bottom nav bar (3)
+- Need to start introducing themes (4)
