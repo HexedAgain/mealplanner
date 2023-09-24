@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class DbStep(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val title: String,
-    val recipeId: Int,
+    val recipeId: Long,
     val body: String
 )

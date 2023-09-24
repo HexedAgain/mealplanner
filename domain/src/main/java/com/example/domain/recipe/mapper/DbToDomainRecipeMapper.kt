@@ -6,7 +6,7 @@ import com.example.domain.recipe.model.Recipe
 import com.example.domain.recipe.model.RecipeStep
 import javax.inject.Inject
 
-class DbRecipeToRecipeMapper @Inject constructor(): Mapper<List<DbRecipeWithSteps>, List<Recipe>> {
+class DbToDomainRecipeMapper @Inject constructor(): Mapper<List<DbRecipeWithSteps>, List<Recipe>> {
     override fun invoke(input: List<DbRecipeWithSteps>): List<Recipe> {
         return input.map { recipeWithSteps ->
             Recipe(
