@@ -24,4 +24,5 @@ dependencies {
 
     testImplementation(libs.bundles.kotest)
     testImplementation(libs.mockk)
+    testImplementation project(path: ':data:database')
 }

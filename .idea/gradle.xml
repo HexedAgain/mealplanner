@@ -23,6 +23,7 @@
             <option value="$PROJECT_DIR$/feature/lab" />
             <option value="$PROJECT_DIR$/feature/recipes" />
             <option value="$PROJECT_DIR$/feature/settings" />
+            <option value="$PROJECT_DIR$/sharedTest" />
           </set>
         </option>
       </GradleProjectSettings>

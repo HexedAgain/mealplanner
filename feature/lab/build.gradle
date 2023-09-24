@@ -19,4 +19,16 @@ android {
 dependencies {
     implementation project(path: ':core')
     implementation project(path: ':assets')
+    implementation project(path: ':domain')
+    testImplementation project(path: ':sharedTest')
+
+    testImplementation(libs.bundles.kotest)
+    testImplementation(libs.bundles.junit5)
+    testImplementation(libs.junit4)
+
+    // For Robolectric tests.
+    testImplementation 'com.google.dagger:hilt-android-testing:2.44'
+    // ...with Kotlin.
+    kaptTest 'com.google.dagger:hilt-android-compiler:2.44'
+
 }

@@ -12,7 +12,7 @@ class GetRecipesUseCaseImpl @Inject constructor(
     private val mapper: Mapper<List<DbRecipeWithSteps>, List<Recipe>>
 ): GetRecipesUseCase {
     override suspend fun invoke(): State<List<Recipe>> {
-        val results = recipeRepository.getRecipes()
+        val results = recipeRepository.getRecipesLocally()
         return State.Success(mapper(results))
     }
 }
