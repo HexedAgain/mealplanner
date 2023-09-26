@@ -1,9 +1,13 @@
 package com.example.lab.ui.theme
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.ui.Modifier
 import com.example.assets.R
+import com.example.assets.theme.Metrics
 
 val labScreenModifier = object: LabScreenModifier {
-
+    override val labScreenRoot = Modifier
+        .padding(Metrics.paddingNormal)
 }
 
 val labScreenText = object: LabScreenText {

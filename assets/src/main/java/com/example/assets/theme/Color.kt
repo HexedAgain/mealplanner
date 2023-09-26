@@ -11,3 +11,9 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val darkBlue = Color(0xFF222288)
+val darkBlue2 = Color(0xFF111133)
+
+val cyan = Color(0xFF44EEFF)
+val lightGrey = Color(0xFFCCCCCC)
+val darkGrey = Color(0xFF060611)
+
