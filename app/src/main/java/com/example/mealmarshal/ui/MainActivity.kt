@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -21,6 +22,8 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
 import com.example.core.navigation.Navigator
+import com.example.core.ui.theme.GeneralUISchemeLight
+import com.example.core.ui.theme.LocalGeneralUITheme
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,11 +39,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             MealMarshalTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    BottomNav(navigator = navigator)
+                CompositionLocalProvider(LocalGeneralUITheme provides GeneralUISchemeLight()) {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        BottomNav(navigator = navigator)
+                    }
                 }
             }
         }

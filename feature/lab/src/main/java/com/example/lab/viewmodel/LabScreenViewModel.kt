@@ -4,6 +4,7 @@ import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.core.error.UIRecipeErrorCode
+import com.example.core.navigation.Navigator
 import com.example.core.state.State
 import com.example.domain.recipe.model.Recipe
 import com.example.domain.recipe.model.RecipeStep
@@ -30,8 +31,10 @@ interface AddRecipeHandler {
 
 @HiltViewModel
 class LabScreenViewModel @Inject constructor(
-    private val insertRecipeUseCase: InsertRecipeUseCase
+    private val insertRecipeUseCase: InsertRecipeUseCase,
+    private val navigator: Navigator
 ):
+    Navigator by navigator,
     AddRecipeHandler,
     ViewModel() {
 

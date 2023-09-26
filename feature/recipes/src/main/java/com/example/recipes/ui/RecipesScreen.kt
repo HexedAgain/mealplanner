@@ -8,17 +8,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.core.ui.ThemedAppBar
+import com.example.recipes.ui.theme.LocalRecipeScreenTheme
 import com.example.recipes.viewmodel.RecipesViewModel
 
 @Composable
 fun RecipesScreen(recipesViewModel: RecipesViewModel = hiltViewModel()) {
+    val theme = LocalRecipeScreenTheme.current
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight()
     ) {
-        Box(
-            modifier = Modifier.height(100.dp).fillMaxWidth().background(Color.Gray)
-        ) {
-            Text("Recipes")
-        }
+        ThemedAppBar(
+            titleResId = theme.text.recipeScreenTitle,
+            navigator = recipesViewModel
+        )
     }
 }

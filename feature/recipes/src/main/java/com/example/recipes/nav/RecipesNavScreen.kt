@@ -1,9 +1,12 @@
 package com.example.recipes.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import com.example.core.navigation.BottomNavigationItem
 import com.example.assets.R
 import com.example.recipes.ui.RecipesScreen
+import com.example.recipes.ui.theme.LocalRecipeScreenTheme
+import com.example.recipes.ui.theme.RecipeScreenScheme
 import javax.inject.Inject
 
 class RecipesNavScreen @Inject constructor(): BottomNavigationItem {
@@ -16,6 +19,10 @@ class RecipesNavScreen @Inject constructor(): BottomNavigationItem {
 
     @Composable
     override fun Content() {
-        RecipesScreen()
+        CompositionLocalProvider(
+            LocalRecipeScreenTheme provides RecipeScreenScheme()
+        ) {
+            RecipesScreen()
+        }
     }
 }

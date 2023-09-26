@@ -3,4 +3,11 @@
     <string name="bottom_nav_recipes">Recipes</string>
     <string name="bottom_nav_lab">Lab</string>
     <string name="bottom_nav_settings">Settings</string>
+
+    <string name="recipes_screen_title">Recipes</string>
+
+    <string name="lab_screen_title">Laboratory</string>
+    <string name="add_new_recipe">Add New Recipe</string>
+
+    <string name="content_desc_back_arrow">Back Arrow</string>
 </resources>

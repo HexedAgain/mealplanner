@@ -1,9 +1,12 @@
 package com.example.lab.nav
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import com.example.core.navigation.BottomNavigationItem
 import com.example.assets.R
 import com.example.lab.ui.LabScreen
+import com.example.lab.ui.theme.LabScreenSchemeLight
+import com.example.lab.ui.theme.LocalLabScreenTheme
 import javax.inject.Inject
 
 class LabNavScreen @Inject constructor(): BottomNavigationItem {
@@ -15,6 +18,10 @@ class LabNavScreen @Inject constructor(): BottomNavigationItem {
 
     @Composable
     override fun Content() {
-        LabScreen()
+        CompositionLocalProvider(
+            LocalLabScreenTheme provides LabScreenSchemeLight()
+        ) {
+            LabScreen()
+        }
     }
 }
