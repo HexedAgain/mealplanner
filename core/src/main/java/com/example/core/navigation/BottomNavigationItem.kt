@@ -5,4 +5,6 @@ interface BottomNavigationItem: NavigationItem {
     val navigationIconText: Int
     val navOrder: Int
     val isDialog: Boolean
+    override val showNavBar: Boolean
+        get() = true
 }

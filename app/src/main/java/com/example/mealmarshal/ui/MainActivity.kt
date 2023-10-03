@@ -60,11 +60,14 @@ fun BottomNav(
     mainScreenViewModel: MainScreenViewModel = hiltViewModel()
 ) {
     val bottomNavItems = mainScreenViewModel.bottomNavItems.toSortedSet { lhs, rhs -> lhs.navOrder.compareTo(rhs.navOrder) }
+    val navScreens = mainScreenViewModel.screens
     val navController = rememberNavController()
     ListenForNavigationEvents(navigator = navigator, navController = navController)
 
     Scaffold(
         bottomBar = {
+            // TODO to hide / show the navbar I need to get the current route as a NavigationItem
+            //      and if it has showNav then compose the next bit ...
             BottomAppBar {
                 val navstackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navstackEntry?.destination
@@ -121,6 +124,11 @@ fun BottomNav(
                     composable(navItem.routeName) {
                         navItem.Content()
                     }
+                }
+            }
+            navScreens.forEach { screen ->
+                composable(screen.routeName) {
+                    screen.Content()
                 }
             }
         }

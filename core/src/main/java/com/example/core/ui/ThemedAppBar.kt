@@ -14,7 +14,7 @@ import com.example.core.ui.theme.LocalGeneralUITheme
 @Composable
 fun ThemedAppBar(
     titleResId: Int,
-    navigator: Navigator
+    navigator: Navigator? = null
 ) {
     val theme = LocalGeneralUITheme.current.appBar
     SmallTopAppBar(
@@ -25,13 +25,15 @@ fun ThemedAppBar(
             )
         },
         navigationIcon = {
-            IconButton(
-                onClick = { navigator.navigateUp() }
-            ) {
-                Icon(
-                    painter = painterResource(id = theme.icon.backArrow),
-                    contentDescription = stringResource(theme.contentDesc.backArrow),
-                )
+            navigator?.let {
+                IconButton(
+                    onClick = { it.navigateUp() }
+                ) {
+                    Icon(
+                        painter = painterResource(id = theme.icon.backArrow),
+                        contentDescription = stringResource(theme.contentDesc.backArrow),
+                    )
+                }
             }
         },
         colors = theme.colour.appBarColours
@@ -41,7 +43,7 @@ fun ThemedAppBar(
 @Composable
 fun ThemedAppBarScreen(
     titleResId: Int,
-    navigator: Navigator,
+    navigator: Navigator? = null,
     content: @Composable () -> Unit
 ) {
     val theme = LocalGeneralUITheme.current.appBar

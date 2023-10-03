@@ -5,7 +5,7 @@ import com.example.core.state.State
 import com.example.data.database.model.entity.DbStep
 import com.example.domain.recipe.model.RecipeStep
 import com.example.domain.recipe.usecase.InsertRecipeUseCase
-import com.example.lab.viewmodel.LabScreenViewModel
+import com.example.lab.viewmodel.AddRecipeScreenViewModel
 import com.example.sharedtest.core.kotest.MainDispatcherSpec
 import com.example.sharedtest.data.database.model.dao.MockRecipeDao
 import com.example.sharedtest.domain.recipe.model.RecipeStepMocks
@@ -19,7 +19,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 @OptIn(ExperimentalCoroutinesApi::class)
 class LabScreenViewModelTest: MainDispatcherSpec() {
 
-    private lateinit var viewModel: LabScreenViewModel
+    private lateinit var viewModel: AddRecipeScreenViewModel
     private lateinit var useCaseFactory: InsertRecipeUseCaseFactory
     private lateinit var insertRecipeUseCase: InsertRecipeUseCase
     private lateinit var mockRecipeDao: MockRecipeDao
@@ -32,7 +32,7 @@ class LabScreenViewModelTest: MainDispatcherSpec() {
         useCaseFactory = InsertRecipeUseCaseFactory(mockDispatcher)
         insertRecipeUseCase = useCaseFactory.createForTest()
         mockRecipeDao = useCaseFactory.repositoryFactory.recipeDao as MockRecipeDao
-        viewModel = LabScreenViewModel(
+        viewModel = AddRecipeScreenViewModel(
             insertRecipeUseCase = insertRecipeUseCase
         )
     }
