@@ -106,7 +106,7 @@ fun BottomNav(
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
+                    animationSpec = tween(200)
                 )
             },
             exitTransition = {

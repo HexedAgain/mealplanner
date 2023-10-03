@@ -1,3 +1,5 @@
+- Consider MVI pattern / how can we split up the view data so that composables
+  only see their own state / how to avoid prop drilling?
 - Need UI to create a new recipe from Lab screen (1)
 - Will be able to create new recipes (5)
 - Will be able to source recipes from file, or an external site
