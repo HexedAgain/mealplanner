@@ -7,7 +7,8 @@ import com.example.core.state.State
 import com.example.domain.recipe.model.Recipe
 import javax.inject.Inject
 
-class InsertRecipeUseCaseImpl @Inject constructor(
+//class InsertRecipeUseCaseImpl @Inject constructor(
+class InsertRecipeUseCaseImpl(
     private val recipeRepository: RecipeRepository,
 ): InsertRecipeUseCase {
     override suspend fun invoke(arg: Recipe): State<Unit> {

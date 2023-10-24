@@ -5,9 +5,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.core.ui.ThemedAppBarScreen
 import com.example.recipes.ui.theme.LocalRecipeScreenTheme
 import com.example.recipes.viewmodel.RecipesViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RecipesScreen(recipesViewModel: RecipesViewModel = hiltViewModel()) {
+fun RecipesScreen(recipesViewModel: RecipesViewModel = koinViewModel()) {
     val theme = LocalRecipeScreenTheme.current
     ThemedAppBarScreen(
         titleResId = theme.text.recipeScreenTitle,

@@ -18,4 +18,5 @@ android {
 dependencies {
     implementation project(path: ':assets')
     implementation(libs.koin.core)
+    implementation(libs.koin.android)
 }

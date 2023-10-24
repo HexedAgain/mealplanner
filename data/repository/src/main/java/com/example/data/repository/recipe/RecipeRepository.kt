@@ -7,5 +7,5 @@ import com.example.data.database.model.relation.DbRecipeWithSteps
 
 interface RecipeRepository {
     suspend fun getRecipesLocally(): List<DbRecipeWithSteps>
-    suspend fun insertRecipe(dbRecipe: DbRecipe, steps: List<DbStep>): RepositoryState<Unit>
+    suspend fun insertRecipe(dbRecipe: DbRecipe, dbSteps: List<DbStep>): RepositoryState<Unit>
 }

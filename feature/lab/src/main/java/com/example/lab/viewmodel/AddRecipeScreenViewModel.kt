@@ -41,8 +41,9 @@ interface AddRecipeHandler: ViewEventHandler, ViewStateHolder<AddRecipeViewState
 }
 
 // FIXME There should be an AddRecipeViewModel to be honest and an associated screen (no navbar)
-@HiltViewModel
-class AddRecipeScreenViewModel @Inject constructor(
+//@HiltViewModel
+//class AddRecipeScreenViewModel @Inject constructor(
+class AddRecipeScreenViewModel(
     private val insertRecipeUseCase: InsertRecipeUseCase,
     private val navigator: Navigator
 ):

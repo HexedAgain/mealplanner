@@ -21,6 +21,7 @@ dependencies {
     implementation project(path: ':core')
     implementation project(path: ':assets')
     implementation project(path: ':data:database')
+    implementation(libs.koin.core)
 
     testImplementation(libs.bundles.kotest)
     testImplementation(libs.mockk)

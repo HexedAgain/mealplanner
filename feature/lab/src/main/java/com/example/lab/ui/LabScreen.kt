@@ -17,7 +17,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LabScreen(
-    labViewModel: AddRecipeScreenViewModel = hiltViewModel(),
+    labViewModel: AddRecipeScreenViewModel = koinViewModel(),
     koinAddRecipeViewModel: KoinAddRecipeScreenViewModel = koinViewModel()
 ) {
     val theme = LocalLabScreenTheme.current

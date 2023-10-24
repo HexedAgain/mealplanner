@@ -9,8 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class RecipesViewModel @Inject constructor(
+//@HiltViewModel
+//class RecipesViewModel @Inject constructor(
+class RecipesViewModel(
     private val getRecipesUseCase: GetRecipesUseCase,
     private val navigator: Navigator
 ):

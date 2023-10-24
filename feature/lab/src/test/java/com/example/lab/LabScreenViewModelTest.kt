@@ -1,6 +1,8 @@
 package com.example.lab
 
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.core.error.UIRecipeErrorCode
+import com.example.core.navigation.Navigator
 import com.example.core.state.State
 import com.example.data.database.model.entity.DbStep
 import com.example.domain.recipe.model.RecipeStep
@@ -13,8 +15,32 @@ import com.example.sharedtest.domain.recipe.usecase.InsertRecipeUseCaseFactory
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+
+class MockNavigator: Navigator {
+    override val eventChannel: Channel<Navigator.NavAction> = Channel(UNLIMITED)
+
+    var didNavigateUp = false
+    override fun navigateUp() {
+        didNavigateUp = true
+    }
+
+    var didNavigate = false
+    var routeSupplied: String? = null
+    override fun navigate(route: String) {
+        didNavigate = true
+        routeSupplied = route
+    }
+
+    var didNavigateBack = false
+    override fun navigateBack() {
+        didNavigateBack = true
+    }
+
+}
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LabScreenViewModelTest: MainDispatcherSpec() {
@@ -25,6 +51,7 @@ class LabScreenViewModelTest: MainDispatcherSpec() {
     private lateinit var mockRecipeDao: MockRecipeDao
     private lateinit var mockDispatcher: TestDispatcher
     private lateinit var mockScope: CoroutineScope
+    private lateinit var mockNavigator: MockNavigator
 
     private fun setupViewModel() {
         mockDispatcher = UnconfinedTestDispatcher()
@@ -33,8 +60,10 @@ class LabScreenViewModelTest: MainDispatcherSpec() {
         insertRecipeUseCase = useCaseFactory.createForTest()
         mockRecipeDao = useCaseFactory.repositoryFactory.recipeDao as MockRecipeDao
         viewModel = AddRecipeScreenViewModel(
-            insertRecipeUseCase = insertRecipeUseCase
+            insertRecipeUseCase = insertRecipeUseCase,
+            navigator = mockNavigator
         )
+
     }
     init {
         "updateRecipeTitle" - {
@@ -42,7 +71,7 @@ class LabScreenViewModelTest: MainDispatcherSpec() {
                 setupViewModel()
                 viewModel._recipeTitle.value = "some-initial-title"
 
-                viewModel.updateRecipeTitle("some-new-title")
+//                viewModel.updateRecipeTitle("some-new-title")
 
                 viewModel.recipeTitle.value shouldBe "some-new-title"
             }

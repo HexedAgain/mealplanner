@@ -10,8 +10,8 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RecipeModule {
-    @Binds
-    abstract fun bindsRecipeRepository(
-        recipeRepositoryImpl: RecipeRepositoryImpl
-    ): RecipeRepository
+//    @Binds
+//    abstract fun bindsRecipeRepository(
+//        recipeRepositoryImpl: RecipeRepositoryImpl
+//    ): RecipeRepository
 }

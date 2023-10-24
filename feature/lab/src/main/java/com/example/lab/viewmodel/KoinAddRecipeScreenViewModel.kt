@@ -7,5 +7,7 @@ import com.example.domain.recipe.usecase.KoinInsertRecipeUseCase
 class KoinAddRecipeScreenViewModel(
     private val insertRecipeUseCase: KoinInsertRecipeUseCase,
 ): ViewModel() {
-    fun foo() {}
+    fun foo() {
+        val a = 5
+    }
 }

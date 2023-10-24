@@ -7,7 +7,8 @@ import com.example.core.state.State
 import com.example.domain.recipe.model.Recipe
 import javax.inject.Inject
 
-class GetRecipesUseCaseImpl @Inject constructor(
+//class GetRecipesUseCaseImpl @Inject constructor(
+class GetRecipesUseCaseImpl(
     private val recipeRepository: RecipeRepository,
     private val mapper: Mapper<List<DbRecipeWithSteps>, List<Recipe>>
 ): GetRecipesUseCase {

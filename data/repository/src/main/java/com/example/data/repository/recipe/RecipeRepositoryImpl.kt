@@ -15,9 +15,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-class RecipeRepositoryImpl @Inject constructor(
+//class RecipeRepositoryImpl @Inject constructor(
+class RecipeRepositoryImpl(
     private val recipeDao: RecipeDao,
-    @IODispatcher private val dispatcher: CoroutineDispatcher
+    private val ioDispatcher: CoroutineDispatcher
 ): RecipeRepository {
     override suspend fun getRecipesLocally(): List<DbRecipeWithSteps> {
         // FIXME - need some general machinery to catch exceptions and run this on the io thread
@@ -29,7 +30,7 @@ class RecipeRepositoryImpl @Inject constructor(
         dbRecipe: DbRecipe,
         dbSteps: List<DbStep>
     ): RepositoryState<Unit> {
-        return withContext(dispatcher) {
+        return withContext(ioDispatcher) {
             try {
                 recipeDao.insertRecipeAndSteps(dbRecipe, dbSteps)
                 RepositoryState.Success(Unit)

@@ -1,4 +1,8 @@
 package com.example.domain.recipe.usecase
 
-class KoinInsertRecipeUseCaseImpl: KoinInsertRecipeUseCase {
+import com.example.data.repository.recipe.KoinRecipeRepository
+
+class KoinInsertRecipeUseCaseImpl(
+    private val koinRecipeRepository: KoinRecipeRepository
+): KoinInsertRecipeUseCase {
 }
