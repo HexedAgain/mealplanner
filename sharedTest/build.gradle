@@ -36,10 +36,15 @@ dependencies {
     api project(path: ':data:repository')
     api project(path: ':domain')
     api project(path: ':core')
+    api project(path: ':feature:lab')
 
     implementation(libs.mockk)
     implementation(libs.bundles.kotest)
     implementation(libs.bundles.room)
+    implementation(libs.koin.core)
+    implementation(libs.koin.test.core)
+    implementation(libs.koin.test.junit5)
+    implementation(libs.koin.test.junit4)
 //    implementation 'androidx.core:core-ktx:1.7.0'
 //    implementation 'androidx.appcompat:appcompat:1.6.1'
 //    implementation 'com.google.android.material:material:1.9.0'

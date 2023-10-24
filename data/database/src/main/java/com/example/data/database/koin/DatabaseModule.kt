@@ -18,6 +18,10 @@ val databaseModule = module {
     }
 
     single {
+//        Room.inMemoryDatabaseBuilder(
+//            get(qualifier = named("ApplicationContext")),
+//            AppDatabase::class.java,
+//        ).build()
         Room.databaseBuilder(
             get(qualifier = named("ApplicationContext")),
             AppDatabase::class.java,

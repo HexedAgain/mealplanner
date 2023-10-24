@@ -1,117 +1,24 @@
 package com.example.lab
 
-import android.content.Context
 import com.example.core.error.UIRecipeErrorCode
-import com.example.core.koin.coreModule
-import com.example.core.navigation.Navigator
-import com.example.core.navigation.NavigatorImpl
 import com.example.core.state.State
 import com.example.data.database.model.entity.DbStep
 import com.example.domain.recipe.model.RecipeStep
-import com.example.domain.recipe.usecase.InsertRecipeUseCase
-import com.example.domain.recipe.usecase.InsertRecipeUseCaseImpl
-import com.example.lab.koin.labModule
 import com.example.lab.viewmodel.AddRecipeScreenViewModel
-import com.example.mealmarshal.koin.appModule
-import com.example.sharedtest.core.kotest.MainDispatcherSpec
-import com.example.sharedtest.data.database.model.dao.MockRecipeDao
+import com.example.lab.viewmodel.event.AddRecipeViewEvent
+import com.example.sharedtest.core.kotest.KoinMainDispatcherSpec
 import com.example.sharedtest.domain.recipe.model.RecipeStepMocks
-import com.example.sharedtest.domain.recipe.usecase.InsertRecipeUseCaseFactory
-import io.kotest.core.test.TestCase
-import io.kotest.core.test.TestResult
 import io.kotest.matchers.shouldBe
-import io.mockk.mockk
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
-import kotlinx.coroutines.test.TestDispatcher
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import org.junit.Rule
-import org.junit.jupiter.api.extension.RegisterExtension
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
-import org.koin.core.qualifier.named
-import org.koin.dsl.module
+import org.koin.dsl.koinApplication
 import org.koin.test.KoinTest
-import org.koin.test.KoinTestRule
 import org.koin.test.get
-import org.koin.test.inject
-import org.koin.test.junit5.KoinTestExtension
 
-class MockNavigator: Navigator {
-    override val eventChannel: Channel<Navigator.NavAction> = Channel(UNLIMITED)
-
-    var didNavigateUp = false
-    override fun navigateUp() {
-        didNavigateUp = true
-    }
-
-    var didNavigate = false
-    var routeSupplied: String? = null
-    override fun navigate(route: String) {
-        didNavigate = true
-        routeSupplied = route
-    }
-
-    var didNavigateBack = false
-    override fun navigateBack() {
-        didNavigateBack = true
-    }
-
-}
-
-@OptIn(ExperimentalCoroutinesApi::class)
-class LabScreenViewModelTest: KoinTest, MainDispatcherSpec() {
+class LabScreenViewModelTest: KoinTest, KoinMainDispatcherSpec() {
 
     private lateinit var viewModel: AddRecipeScreenViewModel
-    private lateinit var useCaseFactory: InsertRecipeUseCaseFactory
-    private lateinit var insertRecipeUseCase: InsertRecipeUseCase
-    private lateinit var mockRecipeDao: MockRecipeDao
-    private lateinit var mockDispatcher: TestDispatcher
-    private lateinit var mockScope: CoroutineScope
-    private lateinit var mockNavigator: MockNavigator
-
-    override suspend fun beforeEach(testCase: TestCase) {
-        super.beforeEach(testCase)
-        startKoin {
-            modules(labModule, coreModule, module {
-                single(named("ApplicationContext")) {
-                    mockk<Context>() as Context
-                }
-            })
-        }
-    }
-
-    override suspend fun afterEach(testCase: TestCase, result: TestResult) {
-        super.afterEach(testCase, result)
-        stopKoin()
-    }
 
     private fun setupViewModel() {
-//        startKoin {
-//            modules(appModule)
-//        }
-//        startKoin {
-//            modules(appModule)
-//        }
-        mockDispatcher = UnconfinedTestDispatcher()
-        mockScope = CoroutineScope(mockDispatcher)
-        useCaseFactory = InsertRecipeUseCaseFactory(mockDispatcher)
-//        insertRecipeUseCase = useCaseFactory.createForTest()
-//        mockRecipeDao = useCaseFactory.repositoryFactory.recipeDao as MockRecipeDao
-
-        insertRecipeUseCase = get<InsertRecipeUseCase>()
-        mockNavigator = MockNavigator()
-        viewModel = AddRecipeScreenViewModel(
-            insertRecipeUseCase = insertRecipeUseCase,
-            navigator = mockNavigator
-        )
-
-//        viewModel = AddRecipeScreenViewModel(
-//            insertRecipeUseCase = get()
-//        )
+        viewModel = get()
     }
     init {
         "updateRecipeTitle" - {
@@ -119,7 +26,7 @@ class LabScreenViewModelTest: KoinTest, MainDispatcherSpec() {
                 setupViewModel()
                 viewModel._recipeTitle.value = "some-initial-title"
 
-//                viewModel.updateRecipeTitle("some-new-title")
+                viewModel.updateRecipeTitle(AddRecipeViewEvent.UpdateRecipeTitle("some-new-title"))
 
                 viewModel.recipeTitle.value shouldBe "some-new-title"
             }
@@ -260,7 +167,7 @@ class LabScreenViewModelTest: KoinTest, MainDispatcherSpec() {
 
                     viewModel.saveRecipe()
 
-                    mockRecipeDao.didInsertRecipe shouldBe false
+                    mockRecipeDao.didInvokeInsertRecipe shouldBe false
                     viewModel.uiState.value shouldBe State.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_RECIPE)
                 }
                 "recipe has no steps" {
@@ -269,7 +176,7 @@ class LabScreenViewModelTest: KoinTest, MainDispatcherSpec() {
 
                     viewModel.saveRecipe()
 
-                    mockRecipeDao.didInsertRecipe shouldBe false
+                    mockRecipeDao.didInvokeInsertRecipe shouldBe false
                     viewModel.uiState.value shouldBe State.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_STEPS)
                 }
             }
@@ -281,7 +188,7 @@ class LabScreenViewModelTest: KoinTest, MainDispatcherSpec() {
 
                 viewModel.saveRecipe()
 
-                mockRecipeDao.didInsertRecipe shouldBe true
+                mockRecipeDao.didInvokeInsertRecipe shouldBe true
                 mockRecipeDao.recipeSupplied!!.title shouldBe "some-recipe"
                 viewModel.uiState.value shouldBe State.Error(UIRecipeErrorCode.SAVE_RECIPE_DB_ERROR)
             }
@@ -293,7 +200,7 @@ class LabScreenViewModelTest: KoinTest, MainDispatcherSpec() {
 
                 viewModel.saveRecipe()
 
-                mockRecipeDao.didInsertRecipe shouldBe true
+                mockRecipeDao.didInvokeInsertRecipe shouldBe true
                 mockRecipeDao.recipeSupplied!!.title shouldBe "some-recipe"
                 mockRecipeDao.stepsSupplied shouldBe listOf(
                     DbStep(recipeId = 123, title = RecipeStepMocks.recipeStep.title, body = RecipeStepMocks.recipeStep.body),
