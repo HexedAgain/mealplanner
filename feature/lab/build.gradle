@@ -23,6 +23,7 @@ dependencies {
     testImplementation project(path: ':sharedTest')
 
     implementation(libs.koin.core)
+    implementation(libs.koin.androidx.compose)
 
 //    testImplementation(libs.bundles.kotest)
 //    testImplementation(libs.bundles.junit5)

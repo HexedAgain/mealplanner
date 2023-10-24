@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
@@ -26,8 +27,16 @@ import com.example.core.navigation.Navigator
 import com.example.core.ui.theme.GeneralUISchemeLight
 import com.example.core.ui.theme.LocalGeneralUITheme
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
+import com.example.mealmarshal.viewmodel.MainKoinViewModel
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.androidx.compose.koinViewModel
+import org.koin.androidx.viewmodel.factory.KoinViewModelFactory
+import org.koin.core.qualifier.named
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -38,6 +47,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val koinVm = koinViewModel<MainKoinViewModel>()
+//            val koinVm: MainKoinViewModel by inject(named("IODispatcher"))
+            koinVm.foo()
             MealMarshalTheme {
                 // A surface container using the 'background' color from the theme
                 CompositionLocalProvider(LocalGeneralUITheme provides GeneralUISchemeLight()) {
