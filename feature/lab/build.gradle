@@ -24,6 +24,14 @@ dependencies {
 
     implementation(libs.koin.core)
     implementation(libs.koin.androidx.compose)
+    testImplementation(libs.koin.core)
+    testImplementation(libs.koin.test.core)
+    testImplementation(libs.koin.test.junit5)
+    testImplementation(libs.koin.test.junit4)
+    testImplementation project(path: ':app')
+
+//    testImplementation("io.kotest.extensions:kotest-extensions-koin:1.0.0")
+//    testImplementation("io.kotest:kotest-mpp:4.0.6")
 
 //    testImplementation(libs.bundles.kotest)
 //    testImplementation(libs.bundles.junit5)

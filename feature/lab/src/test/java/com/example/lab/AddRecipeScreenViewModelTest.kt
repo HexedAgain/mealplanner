@@ -1,24 +1,44 @@
 package com.example.lab
 
-import androidx.hilt.navigation.compose.hiltViewModel
+import android.content.Context
 import com.example.core.error.UIRecipeErrorCode
+import com.example.core.koin.coreModule
 import com.example.core.navigation.Navigator
+import com.example.core.navigation.NavigatorImpl
 import com.example.core.state.State
 import com.example.data.database.model.entity.DbStep
 import com.example.domain.recipe.model.RecipeStep
 import com.example.domain.recipe.usecase.InsertRecipeUseCase
+import com.example.domain.recipe.usecase.InsertRecipeUseCaseImpl
+import com.example.lab.koin.labModule
 import com.example.lab.viewmodel.AddRecipeScreenViewModel
+import com.example.mealmarshal.koin.appModule
 import com.example.sharedtest.core.kotest.MainDispatcherSpec
 import com.example.sharedtest.data.database.model.dao.MockRecipeDao
 import com.example.sharedtest.domain.recipe.model.RecipeStepMocks
 import com.example.sharedtest.domain.recipe.usecase.InsertRecipeUseCaseFactory
+import io.kotest.core.test.TestCase
+import io.kotest.core.test.TestResult
 import io.kotest.matchers.shouldBe
+import io.mockk.mockk
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.UNLIMITED
 import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import org.junit.Rule
+import org.junit.jupiter.api.extension.RegisterExtension
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
+import org.koin.test.KoinTest
+import org.koin.test.KoinTestRule
+import org.koin.test.get
+import org.koin.test.inject
+import org.koin.test.junit5.KoinTestExtension
 
 class MockNavigator: Navigator {
     override val eventChannel: Channel<Navigator.NavAction> = Channel(UNLIMITED)
@@ -43,7 +63,7 @@ class MockNavigator: Navigator {
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class LabScreenViewModelTest: MainDispatcherSpec() {
+class LabScreenViewModelTest: KoinTest, MainDispatcherSpec() {
 
     private lateinit var viewModel: AddRecipeScreenViewModel
     private lateinit var useCaseFactory: InsertRecipeUseCaseFactory
@@ -53,17 +73,45 @@ class LabScreenViewModelTest: MainDispatcherSpec() {
     private lateinit var mockScope: CoroutineScope
     private lateinit var mockNavigator: MockNavigator
 
+    override suspend fun beforeEach(testCase: TestCase) {
+        super.beforeEach(testCase)
+        startKoin {
+            modules(labModule, coreModule, module {
+                single(named("ApplicationContext")) {
+                    mockk<Context>() as Context
+                }
+            })
+        }
+    }
+
+    override suspend fun afterEach(testCase: TestCase, result: TestResult) {
+        super.afterEach(testCase, result)
+        stopKoin()
+    }
+
     private fun setupViewModel() {
+//        startKoin {
+//            modules(appModule)
+//        }
+//        startKoin {
+//            modules(appModule)
+//        }
         mockDispatcher = UnconfinedTestDispatcher()
         mockScope = CoroutineScope(mockDispatcher)
         useCaseFactory = InsertRecipeUseCaseFactory(mockDispatcher)
-        insertRecipeUseCase = useCaseFactory.createForTest()
-        mockRecipeDao = useCaseFactory.repositoryFactory.recipeDao as MockRecipeDao
+//        insertRecipeUseCase = useCaseFactory.createForTest()
+//        mockRecipeDao = useCaseFactory.repositoryFactory.recipeDao as MockRecipeDao
+
+        insertRecipeUseCase = get<InsertRecipeUseCase>()
+        mockNavigator = MockNavigator()
         viewModel = AddRecipeScreenViewModel(
             insertRecipeUseCase = insertRecipeUseCase,
             navigator = mockNavigator
         )
 
+//        viewModel = AddRecipeScreenViewModel(
+//            insertRecipeUseCase = get()
+//        )
     }
     init {
         "updateRecipeTitle" - {
