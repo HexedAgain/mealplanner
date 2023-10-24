@@ -25,4 +25,5 @@ dependencies {
 
     implementation(libs.bundles.room)
     kapt(libs.androidx.room.compiler)
+    implementation(libs.koin.core)
 }

@@ -25,4 +25,6 @@ dependencies {
     implementation project(path: ':core')
 
     implementation(libs.androidx.navigation)
+    implementation(libs.koin.core)
+//    implementation "io.insert-koin:koin-core:3.5.0"
 }

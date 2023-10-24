@@ -20,4 +20,5 @@ dependencies {
     implementation project(path: ':assets')
     implementation project(path: ':data:database')
     implementation project(path: ':data:repository')
+    implementation(libs.koin.core)
 }

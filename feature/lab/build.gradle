@@ -22,6 +22,8 @@ dependencies {
     implementation project(path: ':domain')
     testImplementation project(path: ':sharedTest')
 
+    implementation(libs.koin.core)
+
 //    testImplementation(libs.bundles.kotest)
 //    testImplementation(libs.bundles.junit5)
 //    testImplementation(libs.junit4)
