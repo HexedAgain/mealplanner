@@ -6,10 +6,8 @@ import com.example.domain.koin.domainModule
 import com.example.lab.nav.AddRecipeNavScreen
 import com.example.lab.nav.LabNavScreen
 import com.example.lab.viewmodel.AddRecipeScreenViewModel
-import com.example.lab.viewmodel.KoinAddRecipeScreenViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.bind
-import org.koin.dsl.binds
 import org.koin.dsl.module
 
 //val labModule = module {
@@ -18,9 +16,6 @@ import org.koin.dsl.module
 
 val labModule = module {
     includes(domainModule)
-    viewModel {
-        KoinAddRecipeScreenViewModel(get())
-    }
     viewModel {
         AddRecipeScreenViewModel(
             insertRecipeUseCase = get(),

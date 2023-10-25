@@ -9,21 +9,17 @@ import com.example.core.navigation.Navigator
 import com.example.core.ui.ThemedAppBarScreen
 import com.example.lab.nav.AddRecipeNavScreen
 import com.example.lab.ui.theme.LocalLabScreenTheme
-import com.example.lab.viewmodel.AddRecipeHandler
 import com.example.lab.viewmodel.AddRecipeScreenViewModel
-import com.example.lab.viewmodel.KoinAddRecipeScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LabScreen(
     labViewModel: AddRecipeScreenViewModel = koinViewModel(),
-    koinAddRecipeViewModel: KoinAddRecipeScreenViewModel = koinViewModel()
 ) {
     val theme = LocalLabScreenTheme.current
     ThemedAppBarScreen(
         titleResId = theme.text.labScreenTitle
     ) {
-        koinAddRecipeViewModel.foo()
         LazyColumn(
             modifier = theme.modifier.labScreenRoot
         ) {

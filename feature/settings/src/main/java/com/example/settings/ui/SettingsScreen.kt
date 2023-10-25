@@ -11,12 +11,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.settings.viewmodel.SettingsViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SettingsScreen(settingsViewModel: SettingsViewModel = hiltViewModel()) {
+fun SettingsScreen(settingsViewModel: SettingsViewModel = koinViewModel()) {
     Column(Modifier.padding(horizontal = 16.dp).background(Color.White).fillMaxWidth().fillMaxHeight()) {
         val navController = rememberNavController()
         Text("Settings item 1", modifier = Modifier

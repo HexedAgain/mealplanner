@@ -8,4 +8,5 @@ sealed class AddRecipeUIEvent: UIEvent {
     class DeleteStep(val deleteAt: Int): AddRecipeUIEvent()
     class InsertStep(val insertAt: Int?): AddRecipeUIEvent()
     object UpdateStep: AddRecipeUIEvent()
+    object SaveRecipe: AddRecipeUIEvent()
 }

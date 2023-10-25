@@ -1,6 +1,5 @@
 package com.example.lab.viewmodel
 
-import androidx.annotation.VisibleForTesting
 import androidx.compose.runtime.Immutable
 import androidx.lifecycle.viewModelScope
 import com.example.core.error.UIRecipeErrorCode
@@ -19,10 +18,7 @@ import com.example.domain.recipe.usecase.InsertRecipeUseCase
 import com.example.lab.viewmodel.event.AddRecipeUIEvent
 import com.example.lab.viewmodel.event.AddRecipeUIResult
 import com.example.lab.viewmodel.state.AddRecipeViewState
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 interface UIEventHistory<T: UIEvent> {
@@ -59,14 +55,14 @@ data class AddRecipeState(
 // FIXME There should be an AddRecipeViewModel to be honest and an associated screen (no navbar)
 class AddRecipeScreenViewModel(
     private val insertRecipeUseCase: InsertRecipeUseCase,
-    private val navigator: Navigator
+    private val navigator: Navigator,
+    initialState: AddRecipeState = AddRecipeState.empty()
 ):
     Navigator by navigator,
     UIEventStateHandler<AddRecipeState>,
-//    AddRecipeHandler,
     BaseViewModel<AddRecipeState>() {
 
-    private val reducer = AddRecipeReducer(AddRecipeState.empty())
+    private val reducer = AddRecipeReducer(initialState)
 
     override val state: StateFlow<AddRecipeState>
         get() = reducer.state
@@ -78,6 +74,7 @@ class AddRecipeScreenViewModel(
             is AddRecipeUIEvent.DeleteStep,
             is AddRecipeUIEvent.InsertStep,
             is AddRecipeUIEvent.MarkStepForEdit -> reducer.sendEvent(event)
+            is AddRecipeUIEvent.SaveRecipe -> { saveRecipe() }
         }
 //        when (event as AddRecipeUIEvent) {
 //            is UpdateRecipeTitle -> updateRecipeTitle(event as UpdateRecipeTitle)
@@ -90,15 +87,14 @@ class AddRecipeScreenViewModel(
         override fun reduce(oldState: AddRecipeState, result: AddRecipeUIResult) {
             when (result) {
                 is AddRecipeUIResult.SaveRecipe -> {
-                    if (result.state is State.Success) {
-                        setState(oldState.copy(
-                            steps = emptyList(),
-                            recipeTitle = "",
-                            currentStep = RecipeStep.empty()
-                        ))
-                    } else {
-                        setState(oldState.copy(uiState = State.Error(UIRecipeErrorCode.SAVE_RECIPE_DB_ERROR)))
-                    }
+                    setState(oldState.copy(
+                        steps = emptyList(),
+                        recipeTitle = "",
+                        currentStep = RecipeStep.empty()
+                    ))
+                }
+                is AddRecipeUIResult.Error -> {
+                    setState(oldState.copy(uiState = State.Error(result.errorCode)))
                 }
             }
         }
@@ -121,9 +117,7 @@ class AddRecipeScreenViewModel(
                     } else {
                         val newSteps = state.value.steps.toMutableList()
                         newSteps[idx] = state.value.currentStep
-                        setState(oldState.copy(
-                            steps = newSteps
-                        ))
+                        setState(oldState.copy(steps = newSteps))
                     }
                 }
                 is AddRecipeUIEvent.DeleteStep -> {
@@ -154,6 +148,7 @@ class AddRecipeScreenViewModel(
                         currentStep = RecipeStep.empty()
                     ))
                 }
+                AddRecipeUIEvent.SaveRecipe -> {}
             }
         }
     }
@@ -228,26 +223,25 @@ class AddRecipeScreenViewModel(
 //        _currentStep.value = RecipeStep.empty()
 //    }
 //
-//    override fun saveRecipe() {
-//        if (_recipeTitle.value.isEmpty()) {
-//            _uiState.value = State.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_RECIPE)
-//            return
-//        }
-//        if (_steps.value.isEmpty()) {
-//            _uiState.value = State.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_STEPS)
-//            return
-//        }
-//
-//        viewModelScope.launch {
-//            val result = insertRecipeUseCase(Recipe(title = recipeTitle.value, steps = steps.value))
-//            if (result is State.Success) {
-//                _steps.value = emptyList()
-//                _recipeTitle.value = ""
-//            } else {
-//                _uiState.value = State.Error(UIRecipeErrorCode.SAVE_RECIPE_DB_ERROR)
-//            }
-//        }
-//    }
+    private fun saveRecipe() {
+        if (state.value.recipeTitle.isEmpty()) {
+            reducer.sendResult(AddRecipeUIResult.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_RECIPE))
+            return
+        }
+        if (state.value.steps.isEmpty()) {
+            reducer.sendResult(AddRecipeUIResult.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_STEPS))
+            return
+        }
+
+        viewModelScope.launch {
+            val result = with (state.value) { insertRecipeUseCase(Recipe(title = recipeTitle, steps = steps)) }
+            if (result is State.Success) {
+                reducer.sendResult(AddRecipeUIResult.SaveRecipe())
+            } else {
+                reducer.sendResult(AddRecipeUIResult.Error(UIRecipeErrorCode.SAVE_RECIPE_DB_ERROR))
+            }
+        }
+    }
 //
 //    fun updateRecipeTitle(event: UpdateRecipeTitle) {
 //        // FIXME - when viewmodel gets a result it should be going down to base viewmodel, that one updates the view, and then this one should see it

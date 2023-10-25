@@ -1,5 +1,6 @@
 package com.example.core.ui
 
+import com.example.core.error.ErrorCode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,7 +35,7 @@ abstract class Reducer<S: UIState, E: UIEvent, R: UIResult>(initialState: S) {
         reduce(_state.value, event)
     }
 
-    abstract fun reduce(oldState: S, event: R)
+    abstract fun reduce(oldState: S, result: R)
 
     abstract fun reduce(oldState: S, event: E)
 }
