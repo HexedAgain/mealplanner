@@ -29,6 +29,7 @@ import com.example.mealmarshal.ui.theme.MealMarshalTheme
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import org.koin.android.ext.android.inject
+import org.koin.androidx.compose.koinViewModel
 import javax.inject.Inject
 
 //@AndroidEntryPoint
@@ -58,7 +59,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BottomNav(
     navigator: Navigator,
-    mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+//    mainScreenViewModel: MainScreenViewModel = hiltViewModel()
+    mainScreenViewModel: MainScreenViewModel = koinViewModel()
 ) {
     val bottomNavItems = mainScreenViewModel.bottomNavItems.toSortedSet { lhs, rhs -> lhs.navOrder.compareTo(rhs.navOrder) }
     val navScreens = mainScreenViewModel.screens
