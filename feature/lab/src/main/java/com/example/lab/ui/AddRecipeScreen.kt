@@ -5,9 +5,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import com.example.core.ui.UIEventHandler
 import com.example.core.ui.UIEventStateHandler
-import com.example.lab.viewmodel.AddRecipeHandler
 import com.example.lab.viewmodel.AddRecipeScreenViewModel
 import com.example.lab.viewmodel.AddRecipeState
 import com.example.lab.viewmodel.event.AddRecipeUIEvent

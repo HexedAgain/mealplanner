@@ -13,7 +13,7 @@ class GeneralUISchemeDark: GeneralUITheme {
     override val appBar: AppBarTheme = AppBarScheme()
 }
 
-class GeneralUIScheme() {
+class GeneralUIScheme {
     @Composable
     operator fun invoke() {
         val isDarkMode = isSystemInDarkTheme()

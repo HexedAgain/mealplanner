@@ -8,7 +8,7 @@ sealed class State<T> {
     class Empty<T>: State<T>()
     data class Success<T>(val data: T): State<T>()
 
-    fun State.Error<T>.toUnitError(): State.Error<Unit> {
-        return State.Error(errorCode = this.errorCode)
+    fun Error<T>.toUnitError(): Error<Unit> {
+        return Error(errorCode = this.errorCode)
     }
 }

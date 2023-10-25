@@ -1,4 +1,3 @@
 package com.example.core.navigation
 
-interface NavScreen: NavigationItem {
-}
+interface NavScreen: NavigationItem

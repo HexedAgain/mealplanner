@@ -31,7 +31,7 @@ abstract class KoinMainDispatcherSpec(
     lateinit var mockRecipeDao: MockRecipeDao
     lateinit var mockNavigator: MockNavigator
 
-    val mockModule = module() {
+    val mockModule = module {
         factory() {
             mockRecipeDao = MockRecipeDao()
             mockRecipeDao as RecipeDao
