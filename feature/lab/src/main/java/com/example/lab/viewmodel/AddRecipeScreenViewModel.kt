@@ -52,7 +52,7 @@ class AddRecipeScreenViewModel(
             is AddRecipeUIEvent.UpdateRecipeTitle,
             is AddRecipeUIEvent.UpdateStep,
             is AddRecipeUIEvent.DeleteStep,
-            is AddRecipeUIEvent.InsertStep,
+            is AddRecipeUIEvent.InsertStep, // maybe want insert before, insert after
             is AddRecipeUIEvent.MarkStepForEdit -> reducer.sendEvent(event)
             is AddRecipeUIEvent.SaveRecipe -> { saveRecipe() }
         }
@@ -83,11 +83,7 @@ class AddRecipeScreenViewModel(
         override fun reduce(oldState: AddRecipeState, result: AddRecipeUIResult) {
             when (result) {
                 is AddRecipeUIResult.SaveRecipe -> {
-                    setState(oldState.copy(
-                        steps = emptyList(),
-                        recipeTitle = "",
-                        currentStep = RecipeStep.empty()
-                    ))
+                    setState(AddRecipeState.empty())
                 }
                 is AddRecipeUIResult.Error -> {
                     setState(oldState.copy(uiState = State.Error(result.errorCode)))

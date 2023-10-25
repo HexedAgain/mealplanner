@@ -1,6 +1,5 @@
 package com.example.core.ui
 
-import com.example.core.error.ErrorCode
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
