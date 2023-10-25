@@ -21,9 +21,14 @@ interface Navigator {
     fun navigateBack()
 }
 
-class NavigatorImpl @Inject constructor(
-    @MainScope private val scope: CoroutineScope
+//class NavigatorImpl @Inject constructor(
+class NavigatorImpl(
+    //@MainScope private val scope: CoroutineScope
+    private val scope: CoroutineScope
 ): Navigator {
+    init {
+        val a = 5
+    }
     override val eventChannel: Channel<Navigator.NavAction> = Channel()
 
     override fun navigateUp() {

@@ -5,7 +5,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.core.navigation.Navigator
 import com.example.core.ui.ThemedAppBarScreen
 import com.example.lab.nav.AddRecipeNavScreen
@@ -30,7 +29,7 @@ fun LabScreen(
         ) {
             item {
                 AddRecipeSection(
-                    addRecipeHandler = labViewModel,
+//                    addRecipeHandler = labViewModel,
                     navigator = labViewModel
                 )
             }
@@ -40,7 +39,7 @@ fun LabScreen(
 
 @Composable
 fun AddRecipeSection(
-    addRecipeHandler: AddRecipeHandler,
+//    addRecipeHandler: AddRecipeHandler,
     navigator: Navigator
 ) {
     val theme = LocalLabScreenTheme.current

@@ -5,11 +5,10 @@ import com.example.core.state.State
 import com.example.data.database.model.entity.DbStep
 import com.example.domain.recipe.model.RecipeStep
 import com.example.lab.viewmodel.AddRecipeScreenViewModel
-import com.example.lab.viewmodel.event.AddRecipeViewEvent
+import com.example.lab.viewmodel.event.AddRecipeUIEvent
 import com.example.sharedtest.core.kotest.KoinMainDispatcherSpec
 import com.example.sharedtest.domain.recipe.model.RecipeStepMocks
 import io.kotest.matchers.shouldBe
-import org.koin.dsl.koinApplication
 import org.koin.test.KoinTest
 import org.koin.test.get
 
@@ -26,7 +25,7 @@ class LabScreenViewModelTest: KoinTest, KoinMainDispatcherSpec() {
                 setupViewModel()
                 viewModel._recipeTitle.value = "some-initial-title"
 
-                viewModel.updateRecipeTitle(AddRecipeViewEvent.UpdateRecipeTitle("some-new-title"))
+                viewModel.updateRecipeTitle(AddRecipeUIEvent.UpdateRecipeTitle("some-new-title"))
 
                 viewModel.recipeTitle.value shouldBe "some-new-title"
             }

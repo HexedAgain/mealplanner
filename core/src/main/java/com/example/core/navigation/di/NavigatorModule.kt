@@ -11,9 +11,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class NavigatorModule {
-    @Singleton
-    @Binds
-    abstract fun bindsNavigator(
-        navigatorImpl: NavigatorImpl
-    ): Navigator
+//    @Singleton
+//    @Binds
+//    abstract fun bindsNavigator(
+//        navigatorImpl: NavigatorImpl
+//    ): Navigator
 }

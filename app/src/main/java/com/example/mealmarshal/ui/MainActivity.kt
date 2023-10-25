@@ -28,13 +28,14 @@ import com.example.core.ui.theme.LocalGeneralUITheme
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import org.koin.android.ext.android.inject
 import javax.inject.Inject
 
-@AndroidEntryPoint
+//@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var navigator: Navigator
+//    @Inject
+    val navigator by inject<Navigator>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
