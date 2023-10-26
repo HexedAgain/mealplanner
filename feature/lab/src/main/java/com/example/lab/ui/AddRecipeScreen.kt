@@ -15,6 +15,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.core.ui.CollapsableThemedAppBarScreen
 import com.example.core.ui.ThemedAppBarScreen
 import com.example.core.ui.UIEventStateHandler
 import com.example.domain.recipe.model.RecipeStep
@@ -24,13 +25,15 @@ import com.example.lab.viewmodel.AddRecipeState
 import com.example.lab.viewmodel.AddRecipeStateEventHandler
 import com.example.lab.viewmodel.event.AddRecipeUIEvent
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewModel()) {
     val state = addRecipeScreenViewModel.state.collectAsState().value
     val theme = LocalAddRecipeScreenTheme.current
-    ThemedAppBarScreen(
-        titleResId = theme.text.title
+    CollapsableThemedAppBarScreen(
+        titleResId = theme.text.title,
+        navigator = koinInject()
     ) {
         RecipeList()
     }
