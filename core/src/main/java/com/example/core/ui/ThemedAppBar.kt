@@ -1,8 +1,10 @@
 package com.example.core.ui
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -14,6 +16,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -29,11 +32,13 @@ import kotlin.math.roundToInt
 
 @Composable
 fun ThemedAppBar(
+    modifier: Modifier = Modifier,
     titleResId: Int,
     navigator: Navigator? = null
 ) {
     val theme = LocalGeneralUITheme.current.appBar
     SmallTopAppBar(
+        modifier = modifier,
         title = {
             Text(
                 text = stringResource(titleResId),
@@ -96,12 +101,34 @@ fun CollapsableThemedAppBarScreen(
             }
         }
     }
-    ThemedAppBarScreen(
-        titleResId = titleResId,
-        navigator = navigator,
-        content = content,
-        modifier = Modifier
+    val theme = LocalGeneralUITheme.current.appBar
+    Box(
+        modifier = theme.modifier.appBarRoot
             .nestedScroll(nestedScrollConnection)
-            .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
-    )
+    ) {
+        ThemedAppBar(
+            titleResId = titleResId,
+            navigator = navigator,
+            modifier = Modifier
+                .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxHeight()
+                .offset { IntOffset(x = 0, y = (toolbarHeightPx + toolbarOffsetHeightPx.value).roundToInt())}
+        ) {
+            content()
+        }
+    }
+//    ThemedAppBarScreen(
+//        titleResId = titleResId,
+//        navigator = navigator,
+////        content = content,
+////        modifier = Modifier
+////            .nestedScroll(nestedScrollConnection)
+//////            .height(toolbarOffsetHeightPx.value.roundToInt().dp)
+////            .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
+//    ) {
+//
+//    }
 }

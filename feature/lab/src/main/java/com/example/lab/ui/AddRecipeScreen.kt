@@ -3,6 +3,7 @@ package com.example.lab.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -31,34 +32,15 @@ import org.koin.compose.koinInject
 fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewModel()) {
     val state = addRecipeScreenViewModel.state.collectAsState().value
     val theme = LocalAddRecipeScreenTheme.current
-    CollapsableThemedAppBarScreen(
-        titleResId = theme.text.title,
-        navigator = koinInject()
-    ) {
-        RecipeList()
-    }
-}
-
-@Composable
-fun RecipeList(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewModel()) {
-    val state = addRecipeScreenViewModel.state.collectAsState().value
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize()
+        CollapsableThemedAppBarScreen(
+            titleResId = theme.text.title,
+            navigator = koinInject()
         ) {
-            item {
-                RecipeTitle(stateEventHandler = addRecipeScreenViewModel)
-            }
-            itemsIndexed(state.steps, key = {x, y -> y.id}) { index, step ->
-                EditableRecipeStep(
-                    step = step,
-                    idx = index,
-                    uiEventHandler = addRecipeScreenViewModel
-                )
-            }
+            RecipeList()
         }
         FloatingActionButton(
             onClick = { addRecipeScreenViewModel.postEvent(AddRecipeUIEvent.InsertStep(insertAt = null)) },
@@ -68,6 +50,25 @@ fun RecipeList(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewMode
             Text(
                 text  = "Add step",
                 modifier = Modifier.padding(4.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun RecipeList(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewModel()) {
+    val state = addRecipeScreenViewModel.state.collectAsState().value
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        item {
+            RecipeTitle(stateEventHandler = addRecipeScreenViewModel)
+        }
+        itemsIndexed(state.steps, key = {x, y -> y.id}) { index, step ->
+            EditableRecipeStep(
+                step = step,
+                idx = index,
+                uiEventHandler = addRecipeScreenViewModel
             )
         }
     }
