@@ -13,4 +13,5 @@ sealed class AddRecipeUIEvent: UIEvent {
         val body: String? = null
     ): AddRecipeUIEvent()
     object SaveRecipe: AddRecipeUIEvent()
+    object DismissError: AddRecipeUIEvent()
 }

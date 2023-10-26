@@ -17,9 +17,6 @@ class InsertRecipeUseCaseImpl(
         if (recipe.title.isEmpty()) {
             return State.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_RECIPE)
         }
-        if (recipe.steps.isEmpty()) {
-            return State.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_STEPS)
-        }
         if (recipe.steps.any { it.title.isEmpty() xor it.body.isEmpty() }) {
             return State.Error(UIRecipeErrorCode.SAVE_RECIPE_INCOMPLETE_STEP)
         }
@@ -39,10 +36,10 @@ class InsertRecipeUseCaseImpl(
                 )
             }
 
-        return if (titles.size < dbSteps.size) {
-            return State.Error(UIRecipeErrorCode.SAVE_RECIPE_DUPLICATE_STEP)
-        } else {
-            recipeRepository.insertRecipe(dbRecipe, dbSteps).toUIState()
+        return when {
+            dbSteps.isEmpty() -> State.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_STEPS)
+            titles.size < dbSteps.size -> State.Error(UIRecipeErrorCode.SAVE_RECIPE_DUPLICATE_STEP)
+            else -> recipeRepository.insertRecipe(dbRecipe, dbSteps).toUIState()
         }
     }
 }

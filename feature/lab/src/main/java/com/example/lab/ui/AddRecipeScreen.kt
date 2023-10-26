@@ -15,14 +15,18 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.core.state.State
 import com.example.core.ui.CollapsableThemedAppBarScreen
 import com.example.core.ui.ThemedActionButton
 import com.example.core.ui.ThemedAppBarScreen
 import com.example.core.ui.UIEventStateHandler
+import com.example.core.uinotification.UINotification
 import com.example.domain.recipe.model.RecipeStep
 import com.example.lab.ui.theme.LocalAddRecipeScreenTheme
 import com.example.lab.viewmodel.AddRecipeScreenViewModel
@@ -36,6 +40,19 @@ import org.koin.core.component.getScopeId
 @Composable
 fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewModel()) {
     val theme = LocalAddRecipeScreenTheme.current
+    val uiState = addRecipeScreenViewModel.state.collectAsState().value.uiState
+    when(uiState) {
+        is State.Error -> {
+            val uiNotification: UINotification = koinInject()
+            uiNotification.postDismissableError(
+                errorCode = uiState.errorCode,
+                onDismissed = {
+                    addRecipeScreenViewModel.postEvent(AddRecipeUIEvent.DismissError)
+                }
+            )
+        }
+        else -> {}
+    }
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomEnd,
@@ -86,7 +103,7 @@ fun RecipeList(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewMode
         item {
             RecipeTitle(stateEventHandler = addRecipeScreenViewModel)
         }
-        itemsIndexed(state.steps, key = {x, y -> y.id}) { index, step ->
+        itemsIndexed(state.steps) { index, step ->
             EditableRecipeStep(
                 step = step,
                 idx = index,

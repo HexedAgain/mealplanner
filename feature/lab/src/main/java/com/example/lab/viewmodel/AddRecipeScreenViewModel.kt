@@ -49,7 +49,6 @@ class AddRecipeScreenViewModel(
 ):
     Navigator by navigator,
     AddRecipeStateEventHandler,
-//    UIEventStateHandler<AddRecipeState>,
     BaseViewModel<AddRecipeState>() {
 
     private val reducer = AddRecipeReducer(initialState)
@@ -62,6 +61,7 @@ class AddRecipeScreenViewModel(
 
     override fun postEvent(event: UIEvent) {
         when (event as AddRecipeUIEvent) {
+            is AddRecipeUIEvent.DismissError,
             is AddRecipeUIEvent.UpdateRecipeTitle,
             is AddRecipeUIEvent.UpdateStep,
             is AddRecipeUIEvent.DeleteStep,
@@ -96,6 +96,9 @@ class AddRecipeScreenViewModel(
         }
         override fun reduce(oldState: AddRecipeState, event: AddRecipeUIEvent) {
             when (event) {
+                is AddRecipeUIEvent.DismissError -> {
+                    setState(oldState.copy(uiState = State.Empty()))
+                }
                 is AddRecipeUIEvent.UpdateRecipeTitle -> {
                     setState(oldState.copy(recipeTitle = event.newTitle))
                 }
@@ -114,7 +117,6 @@ class AddRecipeScreenViewModel(
                         val newStep = RecipeStep(
                             title = event.title ?: currentStep.title,
                             body = event.body ?: currentStep.body,
-                            id = currentStep.id
                         )
                         val newSteps = state.value.steps.toMutableList()
                         newSteps[event.updateAt] = newStep

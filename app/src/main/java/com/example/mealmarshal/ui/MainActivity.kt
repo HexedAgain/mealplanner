@@ -7,32 +7,41 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import com.example.core.navigation.BottomNavigationItem
 import com.example.core.navigation.ListenForNavigationEvents
+import com.example.core.navigation.NavScreen
 import com.example.core.navigation.Navigator
 import com.example.core.ui.theme.GeneralUISchemeLight
 import com.example.core.ui.theme.LocalGeneralUITheme
+import com.example.core.uinotification.UINotification
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     val navigator by inject<Navigator>()
@@ -46,7 +55,8 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-                        BottomNav(navigator = navigator)
+//                        MainActivityScaffold(navigator = navigator)
+                        MainScaffold(navigator = navigator)
                     }
                 }
             }
@@ -54,9 +64,38 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
-fun BottomNav(
+fun ListenForErrors(snackbarHostState: SnackbarHostState) {
+    // We need to be posting the errors somewhere, and then for this guy to be collecting them
+    val uiNotification: UINotification = koinInject()
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        uiNotification.error.collect { error ->
+            error?.let {
+                val actionResId = error.actionResId
+                val actionLabel = when {
+                    error.actionAsDismiss -> "DISMISS"
+                    actionResId == null -> null
+                    else -> context.getString(actionResId)
+                }
+                val response: SnackbarResult = snackbarHostState.showSnackbar(
+                    message = "some message: ${error.errorCode}",
+                    actionLabel = actionLabel
+                )
+                if (response == SnackbarResult.Dismissed) {
+                    error.onDismissed.invoke()
+                }
+                if (response == SnackbarResult.ActionPerformed) {
+                    error.onAction.invoke()
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainScaffold(
     navigator: Navigator,
     mainScreenViewModel: MainScreenViewModel = koinViewModel()
 ) {
@@ -81,73 +120,102 @@ fun BottomNav(
         }
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    ListenForErrors(snackbarHostState = snackbarHostState)
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackbarHostState)
+        },
         bottomBar = {
             if (showBottomNav) {
-                BottomAppBar {
-                    val navstackEntry by navController.currentBackStackEntryAsState()
-                    val currentDestination = navstackEntry?.destination
-                    bottomNavItems.forEach { item ->
-                        NavigationBarItem(
-                            selected = currentDestination?.hierarchy?.any { it.route == item.routeName } == true,
-                            onClick = {
-                                navController.navigate(item.routeName) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    painter = painterResource(id = item.navigationIconRes),
-                                    contentDescription = null
-                                )
-                            },
-                            label = {
-                                Text(
-                                    text = stringResource(id = item.navigationIconText)
-                                )
-                            }
-                        )
-                    }
-                }
+                BottomNav(bottomNavItems = bottomNavItems, navController = navController)
             }
         }
     ) { padding ->
         NavHost(
+            navScreens = navScreens,
+            bottomNavItems = bottomNavItems,
             navController = navController,
-            startDestination = bottomNavItems.first().routeName,
-            modifier = Modifier.padding(padding),
-            enterTransition = {
-                slideIntoContainer(
-                    towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(300)
-                )
-            },
-            exitTransition = {
-                fadeOut(animationSpec = tween(300))
-            }
-        ) {
-            bottomNavItems.forEach { navItem ->
-                if (navItem.isDialog) {
-                    dialog(
-                        route = navItem.routeName,
-                        dialogProperties = DialogProperties()) {
-                        navItem.Content()
-                    }
-                } else {
-                    composable(navItem.routeName) {
-                        navItem.Content()
-                    }
+            padding = padding
+        )
+    }
+}
+
+@Composable
+fun NavHost(
+    padding: PaddingValues,
+    navScreens: Set<NavScreen>,
+    navController: NavHostController,
+    bottomNavItems: Set<BottomNavigationItem>
+) {
+
+    NavHost(
+        navController = navController,
+        startDestination = bottomNavItems.first().routeName,
+        modifier = Modifier.padding(padding),
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+                animationSpec = tween(300)
+            )
+        },
+        exitTransition = {
+            fadeOut(animationSpec = tween(300))
+        }
+    ) {
+        bottomNavItems.forEach { navItem ->
+            if (navItem.isDialog) {
+                dialog(
+                    route = navItem.routeName,
+                    dialogProperties = DialogProperties()) {
+                    navItem.Content()
+                }
+            } else {
+                composable(navItem.routeName) {
+                    navItem.Content()
                 }
             }
-            navScreens.forEach { screen ->
-                composable(screen.routeName) {
-                    screen.Content()
-                }
+        }
+        navScreens.forEach { screen ->
+            composable(screen.routeName) {
+                screen.Content()
             }
+        }
+    }
+}
+
+@Composable
+fun BottomNav(
+    navController: NavHostController,
+    bottomNavItems: Set<BottomNavigationItem>
+) {
+    BottomAppBar {
+        val navstackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navstackEntry?.destination
+        bottomNavItems.forEach { item ->
+            NavigationBarItem(
+                selected = currentDestination?.hierarchy?.any { it.route == item.routeName } == true,
+                onClick = {
+                    navController.navigate(item.routeName) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                icon = {
+                    Icon(
+                        painter = painterResource(id = item.navigationIconRes),
+                        contentDescription = null
+                    )
+                },
+                label = {
+                    Text(
+                        text = stringResource(id = item.navigationIconText)
+                    )
+                }
+            )
         }
     }
 }
