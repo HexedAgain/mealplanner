@@ -16,6 +16,7 @@ interface AppBarIcon {
 
 interface AppBarColour {
     @get:Composable val appBarColours: TopAppBarColors
+    val actionBarActionTint: Color
 }
 
 interface AppBarModifier {

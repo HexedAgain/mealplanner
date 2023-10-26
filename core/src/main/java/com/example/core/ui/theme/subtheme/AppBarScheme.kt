@@ -23,6 +23,8 @@ val appBarColourLight = object: AppBarColour {
             titleContentColor = Color.White,
             navigationIconContentColor = Color.White
         )
+
+    override val actionBarActionTint = Color.White
 }
 
 val appBarColourDark = object: AppBarColour {
@@ -32,6 +34,7 @@ val appBarColourDark = object: AppBarColour {
             titleContentColor = lightGrey,
             navigationIconContentColor = lightGrey
         )
+    override val actionBarActionTint = Color.White
 }
 
 val appBarIcon = object: AppBarIcon {

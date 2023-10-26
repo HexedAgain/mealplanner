@@ -11,7 +11,7 @@ val addRecipeScreenColour = object: AddRecipeScreenColour {
 }
 
 val addRecipeScreenIcon = object: AddRecipeScreenIcon {
-
+    override val saveRecipe = R.drawable.check_24
 }
 
 val addRecipeScreenModifier = object: AddRecipeScreenModifier {

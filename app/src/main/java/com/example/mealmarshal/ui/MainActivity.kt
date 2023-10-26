@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
@@ -32,10 +34,7 @@ import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
 
-//@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-//    @Inject
     val navigator by inject<Navigator>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,8 +65,7 @@ fun BottomNav(
     val navController = rememberNavController()
     ListenForNavigationEvents(navigator = navigator, navController = navController)
     var showBottomNav by remember { mutableStateOf(true) }
-
-    navController.addOnDestinationChangedListener { _, destination, _ ->
+    val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
         if (bottomNavItems.map { it.routeName }.contains(destination.route)) {
             showBottomNav = true
         } else {
@@ -76,6 +74,13 @@ fun BottomNav(
             }
         }
     }
+    DisposableEffect(Unit) {
+        navController.addOnDestinationChangedListener(listener)
+        onDispose {
+            navController.removeOnDestinationChangedListener(listener)
+        }
+    }
+
     Scaffold(
         bottomBar = {
             if (showBottomNav) {

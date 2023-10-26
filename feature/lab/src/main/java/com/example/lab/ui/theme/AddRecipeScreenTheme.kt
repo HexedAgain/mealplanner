@@ -12,6 +12,7 @@ interface AddRecipeScreenText {
 }
 
 interface AddRecipeScreenIcon {
+    val saveRecipe: Int
 }
 
 interface AddRecipeScreenModifier {

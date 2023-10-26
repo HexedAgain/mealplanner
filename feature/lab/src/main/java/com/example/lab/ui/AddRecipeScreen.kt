@@ -9,14 +9,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.core.ui.CollapsableThemedAppBarScreen
+import com.example.core.ui.ThemedActionButton
 import com.example.core.ui.ThemedAppBarScreen
 import com.example.core.ui.UIEventStateHandler
 import com.example.domain.recipe.model.RecipeStep
@@ -27,18 +31,19 @@ import com.example.lab.viewmodel.AddRecipeStateEventHandler
 import com.example.lab.viewmodel.event.AddRecipeUIEvent
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
+import org.koin.core.component.getScopeId
 
 @Composable
 fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewModel()) {
-    val state = addRecipeScreenViewModel.state.collectAsState().value
     val theme = LocalAddRecipeScreenTheme.current
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomEnd
+        contentAlignment = Alignment.BottomEnd,
     ) {
         CollapsableThemedAppBarScreen(
             titleResId = theme.text.title,
-            navigator = koinInject()
+            navigator = koinInject(),
+            rhsActions = { SaveAction(stateEventHandler = addRecipeScreenViewModel) }
         ) {
             RecipeList()
         }
@@ -53,6 +58,23 @@ fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinVie
             )
         }
     }
+}
+
+@Composable
+fun SaveAction(
+    stateEventHandler: AddRecipeStateEventHandler
+) {
+    val theme = LocalAddRecipeScreenTheme.current
+    ThemedActionButton(
+        onClick = { stateEventHandler.postEvent(AddRecipeUIEvent.SaveRecipe) },
+        iconResId = theme.icon.saveRecipe
+    )
+//    IconButton(onClick = { /*TODO*/ }) {
+//        Icon(
+//            painter = painterResource(id = theme.icon.saveRecipe),
+//            contentDescription = null
+//        )
+//    }
 }
 
 @Composable

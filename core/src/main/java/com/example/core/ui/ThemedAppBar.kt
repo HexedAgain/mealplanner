@@ -2,6 +2,7 @@ package com.example.core.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,10 +35,12 @@ import kotlin.math.roundToInt
 fun ThemedAppBar(
     modifier: Modifier = Modifier,
     titleResId: Int,
+    rhsActions: (@Composable RowScope.() -> Unit) = {},
     navigator: Navigator? = null
 ) {
     val theme = LocalGeneralUITheme.current.appBar
     SmallTopAppBar(
+        actions = rhsActions,
         modifier = modifier,
         title = {
             Text(
@@ -81,6 +84,7 @@ fun ThemedAppBarScreen(
 fun CollapsableThemedAppBarScreen(
     titleResId: Int,
     navigator: Navigator? = null,
+    rhsActions: @Composable RowScope.() -> Unit = {},
     content: @Composable () -> Unit
 ) {
     // taken from https://developer.android.com/reference/kotlin/androidx/compose/ui/input/nestedscroll/package-summary
@@ -99,6 +103,21 @@ fun CollapsableThemedAppBarScreen(
                 // We're basically watching scroll without taking it
                 return Offset.Zero
             }
+
+//            override fun onPostScroll(
+//                consumed: Offset,
+//                available: Offset,
+//                source: NestedScrollSource
+//            ): Offset {
+//                CoroutineScope(Dispatchers.Main).launch {
+//                    delay(2000)
+//                    for (x in 0..25) {
+//                        delay(20)
+//                        toolbarOffsetHeightPx.value = (toolbarOffsetHeightPx.value + 0.8f).coerceIn(-toolbarHeightPx, 0f)
+//                    }
+//                }
+//                return super.onPostScroll(consumed, available, source)
+//            }
         }
     }
     val theme = LocalGeneralUITheme.current.appBar
@@ -109,6 +128,7 @@ fun CollapsableThemedAppBarScreen(
         ThemedAppBar(
             titleResId = titleResId,
             navigator = navigator,
+            rhsActions = rhsActions,
             modifier = Modifier
                 .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
         )
@@ -120,15 +140,4 @@ fun CollapsableThemedAppBarScreen(
             content()
         }
     }
-//    ThemedAppBarScreen(
-//        titleResId = titleResId,
-//        navigator = navigator,
-////        content = content,
-////        modifier = Modifier
-////            .nestedScroll(nestedScrollConnection)
-//////            .height(toolbarOffsetHeightPx.value.roundToInt().dp)
-////            .offset { IntOffset(x = 0, y = toolbarOffsetHeightPx.value.roundToInt()) }
-//    ) {
-//
-//    }
 }
