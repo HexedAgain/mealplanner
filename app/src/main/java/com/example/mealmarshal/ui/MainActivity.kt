@@ -59,7 +59,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun BottomNav(
     navigator: Navigator,
-//    mainScreenViewModel: MainScreenViewModel = hiltViewModel()
     mainScreenViewModel: MainScreenViewModel = koinViewModel()
 ) {
     val bottomNavItems = mainScreenViewModel.bottomNavItems.toSortedSet { lhs, rhs -> lhs.navOrder.compareTo(rhs.navOrder) }

@@ -36,19 +36,13 @@ fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinVie
             item {
                 RecipeTitle(stateEventHandler = addRecipeScreenViewModel)
             }
-            itemsIndexed(state.steps) { index, step ->
+            itemsIndexed(state.steps, key = {x, y -> y.id}) { index, step ->
                 EditableRecipeStep(
                     step = step,
                     idx = index,
                     uiEventHandler = addRecipeScreenViewModel
                 )
             }
-//            item {
-//                EditableRecipeStep(
-//                    step = state.currentStep,
-//                    uiEventHandler = addRecipeScreenViewModel
-//                )
-//            }
         }
         FloatingActionButton(
             onClick = { addRecipeScreenViewModel.postEvent(AddRecipeUIEvent.InsertStep(insertAt = null)) },
@@ -61,13 +55,6 @@ fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinVie
             )
         }
     }
-}
-
-@Composable
-fun RecipeStep(
-    step: RecipeStep
-) {
-
 }
 
 @Composable
@@ -92,6 +79,7 @@ fun EditableRecipeStep(
     idx: Int,
     uiEventHandler: UIEventStateHandler<AddRecipeState>
 ) {
+    // Would I be able to rig up the viewmodel so that I can collect changes to the step, as opposed to entire state in parent?
     Text("Step ${idx}")
     Column {
         OutlinedTextField(

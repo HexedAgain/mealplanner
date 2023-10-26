@@ -113,7 +113,8 @@ class AddRecipeScreenViewModel(
                         val currentStep = oldState.steps[event.updateAt]
                         val newStep = RecipeStep(
                             title = event.title ?: currentStep.title,
-                            body = event.body ?: currentStep.body
+                            body = event.body ?: currentStep.body,
+                            id = currentStep.id
                         )
                         val newSteps = state.value.steps.toMutableList()
                         newSteps[event.updateAt] = newStep
