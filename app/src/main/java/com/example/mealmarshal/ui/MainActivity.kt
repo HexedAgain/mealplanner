@@ -1,7 +1,10 @@
 package com.example.mealmarshal.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -12,7 +15,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -65,38 +72,48 @@ fun BottomNav(
     val navScreens = mainScreenViewModel.screens
     val navController = rememberNavController()
     ListenForNavigationEvents(navigator = navigator, navController = navController)
+    var showBottomNav by remember { mutableStateOf(true) }
 
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+        if (bottomNavItems.map { it.routeName }.contains(destination.route)) {
+            showBottomNav = true
+        } else {
+            navScreens.find { it.routeName == destination.route }?.let {
+                showBottomNav = it.showNavBar
+            }
+        }
+    }
     Scaffold(
         bottomBar = {
-            // TODO to hide / show the navbar I need to get the current route as a NavigationItem
-            //      and if it has showNav then compose the next bit ...
-            BottomAppBar {
-                val navstackEntry by navController.currentBackStackEntryAsState()
-                val currentDestination = navstackEntry?.destination
-                bottomNavItems.forEach { item ->
-                    NavigationBarItem(
-                        selected = currentDestination?.hierarchy?.any { it.route == item.routeName } == true,
-                        onClick = {
-                            navController.navigate(item.routeName) {
-                                popUpTo(navController.graph.findStartDestination().id) {
-                                    saveState = true
+            if (showBottomNav) {
+                BottomAppBar {
+                    val navstackEntry by navController.currentBackStackEntryAsState()
+                    val currentDestination = navstackEntry?.destination
+                    bottomNavItems.forEach { item ->
+                        NavigationBarItem(
+                            selected = currentDestination?.hierarchy?.any { it.route == item.routeName } == true,
+                            onClick = {
+                                navController.navigate(item.routeName) {
+                                    popUpTo(navController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = true
                                 }
-                                launchSingleTop = true
-                                restoreState = true
+                            },
+                            icon = {
+                                Icon(
+                                    painter = painterResource(id = item.navigationIconRes),
+                                    contentDescription = null
+                                )
+                            },
+                            label = {
+                                Text(
+                                    text = stringResource(id = item.navigationIconText)
+                                )
                             }
-                        },
-                        icon = {
-                            Icon(
-                                painter = painterResource(id = item.navigationIconRes),
-                                contentDescription = null
-                            )
-                        },
-                        label = {
-                            Text(
-                                text = stringResource(id = item.navigationIconText)
-                            )
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }
@@ -108,11 +125,11 @@ fun BottomNav(
             enterTransition = {
                 slideIntoContainer(
                     towards = AnimatedContentTransitionScope.SlideDirection.Right,
-                    animationSpec = tween(200)
+                    animationSpec = tween(300)
                 )
             },
             exitTransition = {
-                fadeOut(animationSpec = tween(100))
+                fadeOut(animationSpec = tween(300))
             }
         ) {
             bottomNavItems.forEach { navItem ->
