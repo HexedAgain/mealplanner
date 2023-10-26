@@ -5,8 +5,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class UINotificationImpl: UINotification {
-    private val _error = MutableStateFlow<UINotification.UIError?>(null)
-    override val error = _error.asStateFlow()
+    private val _event = MutableStateFlow<UINotification.UIEvent?>(null)
+    override val event = _event.asStateFlow()
 
     override fun postError(
         errorCode: ErrorCode,
@@ -14,7 +14,7 @@ class UINotificationImpl: UINotification {
         onAction: () -> Unit,
         onDismissed: () -> Unit
     ) {
-        _error.value = UINotification.UIError(
+        _event.value = UINotification.UIError(
             errorCode = errorCode,
             actionResId = actionResId,
             onAction = onAction,
@@ -26,11 +26,15 @@ class UINotificationImpl: UINotification {
         errorCode: ErrorCode,
         onDismissed: () -> Unit
     ) {
-        _error.value = UINotification.UIError(
+        _event.value = UINotification.UIError(
             actionAsDismiss = true,
             errorCode = errorCode,
             onAction = onDismissed,
             onDismissed = onDismissed
         )
+    }
+
+    override fun dismissSnackbar() {
+        _event.value = UINotification.DismissError()
     }
 }

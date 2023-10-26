@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.PaddingValues
@@ -23,7 +22,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -42,6 +40,7 @@ import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
+import org.koin.java.KoinJavaComponent.inject
 
 class MainActivity : ComponentActivity() {
     val navigator by inject<Navigator>()
@@ -70,24 +69,56 @@ fun ListenForErrors(snackbarHostState: SnackbarHostState) {
     val uiNotification: UINotification = koinInject()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
-        uiNotification.error.collect { error ->
-            error?.let {
-                val actionResId = error.actionResId
-                val actionLabel = when {
-                    error.actionAsDismiss -> "DISMISS"
-                    actionResId == null -> null
-                    else -> context.getString(actionResId)
+        uiNotification.event.collect { event ->
+            var lastError: UINotification.UIError? = null
+            when(event) {
+                is UINotification.UIError -> {
+                    lastError = event
+                    val actionResId = event.actionResId
+                    val actionLabel = when {
+                        event.actionAsDismiss -> "DISMISS"
+                        actionResId == null -> null
+                        else -> context.getString(actionResId)
+                    }
+                    val response: SnackbarResult = snackbarHostState.showSnackbar(
+                        message = "some message: ${event.errorCode}",
+                        actionLabel = actionLabel
+                    )
+                    if (response == SnackbarResult.Dismissed) {
+                        event.onDismissed.invoke()
+                    }
+                    if (response == SnackbarResult.ActionPerformed) {
+                        event.onAction.invoke()
+                    }
                 }
-                val response: SnackbarResult = snackbarHostState.showSnackbar(
-                    message = "some message: ${error.errorCode}",
-                    actionLabel = actionLabel
-                )
-                if (response == SnackbarResult.Dismissed) {
-                    error.onDismissed.invoke()
+                // FIXME - this isn't working ... maybe I could have a method in the screen itself to listen for these errors
+                //         on navigating back, that would cancel the scope and then cancel the error
+                is UINotification.DismissError -> {
+                    snackbarHostState.currentSnackbarData?.dismiss()
                 }
-                if (response == SnackbarResult.ActionPerformed) {
-                    error.onAction.invoke()
-                }
+                else -> {}
+            }
+            event?.let {
+//                when ()
+//                if (error is UINotification.UIError) {
+//                    val actionResId = error.actionResId
+//                    val actionLabel = when {
+//                        error.actionAsDismiss -> "DISMISS"
+//                        actionResId == null -> null
+//                        else -> context.getString(actionResId)
+//                    }
+//                    val response: SnackbarResult = snackbarHostState.showSnackbar(
+//                        message = "some message: ${error.errorCode}",
+//                        actionLabel = actionLabel
+//                    )
+//                    if (response == SnackbarResult.Dismissed) {
+//                        error.onDismissed.invoke()
+//                    }
+//                    if (response == SnackbarResult.ActionPerformed) {
+//                        error.onAction.invoke()
+//                    }
+//                } else {
+//                }
             }
         }
     }
@@ -102,9 +133,11 @@ fun MainScaffold(
     val bottomNavItems = mainScreenViewModel.bottomNavItems.toSortedSet { lhs, rhs -> lhs.navOrder.compareTo(rhs.navOrder) }
     val navScreens = mainScreenViewModel.screens
     val navController = rememberNavController()
+    val uiNotification: UINotification by remember { inject(UINotification::class.java) }
     ListenForNavigationEvents(navigator = navigator, navController = navController)
     var showBottomNav by remember { mutableStateOf(true) }
     val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+        uiNotification.dismissSnackbar()
         if (bottomNavItems.map { it.routeName }.contains(destination.route)) {
             showBottomNav = true
         } else {

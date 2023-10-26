@@ -3,28 +3,22 @@ package com.example.lab.ui
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.core.state.State
 import com.example.core.ui.CollapsableThemedAppBarScreen
 import com.example.core.ui.ThemedActionButton
-import com.example.core.ui.ThemedAppBarScreen
 import com.example.core.ui.UIEventStateHandler
 import com.example.core.uinotification.UINotification
 import com.example.domain.recipe.model.RecipeStep
@@ -35,7 +29,6 @@ import com.example.lab.viewmodel.AddRecipeStateEventHandler
 import com.example.lab.viewmodel.event.AddRecipeUIEvent
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
-import org.koin.core.component.getScopeId
 
 @Composable
 fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewModel()) {
@@ -86,12 +79,6 @@ fun SaveAction(
         onClick = { stateEventHandler.postEvent(AddRecipeUIEvent.SaveRecipe) },
         iconResId = theme.icon.saveRecipe
     )
-//    IconButton(onClick = { /*TODO*/ }) {
-//        Icon(
-//            painter = painterResource(id = theme.icon.saveRecipe),
-//            contentDescription = null
-//        )
-//    }
 }
 
 @Composable
@@ -117,10 +104,11 @@ fun RecipeList(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewMode
 fun RecipeTitle(
     stateEventHandler: AddRecipeStateEventHandler
 ) {
+    val theme = LocalAddRecipeScreenTheme.current
     val title = stateEventHandler.state.collectAsState().value.recipeTitle
     OutlinedTextField(
         label = {
-            Text("Recipe Title")
+            Text(stringResource(id = theme.text.stepBodyLabel))
         },
         value = title,
         onValueChange = {
@@ -136,11 +124,12 @@ fun EditableRecipeStep(
     uiEventHandler: UIEventStateHandler<AddRecipeState>
 ) {
     // Would I be able to rig up the viewmodel so that I can collect changes to the step, as opposed to entire state in parent?
+    val theme = LocalAddRecipeScreenTheme.current
     Text("Step ${idx}")
     Column {
         OutlinedTextField(
             label = {
-                Text("Step Title")
+                Text(stringResource(id = theme.text.stepTitleLabel))
             },
             value = step.title,
             onValueChange = {
@@ -150,7 +139,7 @@ fun EditableRecipeStep(
         )
         OutlinedTextField(
             label = {
-                Text("Step Body")
+                Text(stringResource(id = theme.text.stepBodyLabel))
             },
             value = step.body,
             onValueChange = {

@@ -9,6 +9,9 @@ val LocalAddRecipeScreenTheme = staticCompositionLocalOf<AddRecipeScreenTheme> {
 
 interface AddRecipeScreenText {
     val title: Int
+    val recipeLabel: Int
+    val stepBodyLabel: Int
+    val stepTitleLabel: Int
 }
 
 interface AddRecipeScreenIcon {

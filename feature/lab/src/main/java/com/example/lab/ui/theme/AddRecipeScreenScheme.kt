@@ -4,6 +4,9 @@ import com.example.assets.R
 
 val addRecipeScreenText = object: AddRecipeScreenText {
     override val title = R.string.add_recipe_screen_title
+    override val stepTitleLabel = R.string.add_new_recipe_step_title
+    override val stepBodyLabel = R.string.add_new_recipe_step_body
+    override val recipeLabel = R.string.add_new_recipe_recipe_title
 }
 
 val addRecipeScreenColour = object: AddRecipeScreenColour {
