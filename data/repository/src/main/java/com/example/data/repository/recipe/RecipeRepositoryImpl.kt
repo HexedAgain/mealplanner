@@ -28,12 +28,7 @@ class RecipeRepositoryImpl(
                 recipeDao.insertRecipeAndSteps(dbRecipe, dbSteps)
                 RepositoryState.Success(Unit)
             } catch (ex: java.lang.Exception) {
-                val newEx = ex
-                if (newEx.message == "") {
-                    RepositoryState.Error(DatabaseErrorCode.INSERT_ERROR)
-                } else {
-                    RepositoryState.Error(DatabaseErrorCode.INSERT_ERROR)
-                }
+                RepositoryState.Error(DatabaseErrorCode.INSERT_RECIPE_ERROR)
             }
         }
     }

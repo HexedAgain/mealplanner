@@ -5,4 +5,6 @@ import com.example.domain.core.usecase.UseCaseWithArg
 import com.example.domain.recipe.model.Recipe
 import com.example.domain.recipe.model.RecipeStep
 
-interface InsertRecipeUseCase: UseCaseWithArg<Recipe, State<Unit>>
+interface InsertRecipeUseCase: UseCaseWithArg<Recipe, State<Unit>> {
+    override suspend fun invoke(recipe: Recipe): State<Unit>
+}

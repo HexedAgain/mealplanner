@@ -15,34 +15,47 @@ import com.example.domain.recipe.model.RecipeStep
 import com.example.domain.recipe.usecase.InsertRecipeUseCase
 import com.example.lab.viewmodel.event.AddRecipeUIEvent
 import com.example.lab.viewmodel.event.AddRecipeUIResult
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 @Immutable
 data class AddRecipeState(
     val uiState: State<Unit>,
     val recipeTitle: String,
-    val currentStep: RecipeStep,
+    val currentStep: RecipeStep, // FIXME - don't need this item
     val steps: List<RecipeStep>
 ): UIState {
     companion object {
+        fun default(): AddRecipeState {
+            return AddRecipeState(State.Empty(), "", RecipeStep.empty(), listOf(RecipeStep.empty()))
+        }
         fun empty(): AddRecipeState {
             return AddRecipeState(State.Empty(), "", RecipeStep.empty(), listOf())
         }
     }
 }
 
+interface AddRecipeStateEventHandler: UIEventStateHandler<AddRecipeState> {
+    val steps: StateFlow<List<RecipeStep>>
+}
+
 // FIXME There should be an AddRecipeViewModel to be honest and an associated screen (no navbar)
 class AddRecipeScreenViewModel(
     private val insertRecipeUseCase: InsertRecipeUseCase,
     private val navigator: Navigator,
-    initialState: AddRecipeState = AddRecipeState.empty()
+    initialState: AddRecipeState = AddRecipeState.default()
 ):
     Navigator by navigator,
-    UIEventStateHandler<AddRecipeState>,
+    AddRecipeStateEventHandler,
+//    UIEventStateHandler<AddRecipeState>,
     BaseViewModel<AddRecipeState>() {
 
     private val reducer = AddRecipeReducer(initialState)
+
+    override val steps: StateFlow<List<RecipeStep>>
+        get() = MutableStateFlow(reducer.state.value.steps).asStateFlow()
 
     override val state: StateFlow<AddRecipeState>
         get() = reducer.state
@@ -59,21 +72,12 @@ class AddRecipeScreenViewModel(
     }
 
     private fun saveRecipe() {
-        if (state.value.recipeTitle.isEmpty()) {
-            reducer.sendResult(AddRecipeUIResult.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_RECIPE))
-            return
-        }
-        if (state.value.steps.isEmpty()) {
-            reducer.sendResult(AddRecipeUIResult.Error(UIRecipeErrorCode.SAVE_RECIPE_NO_STEPS))
-            return
-        }
-
         viewModelScope.launch {
             val result = with (state.value) { insertRecipeUseCase(Recipe(title = recipeTitle, steps = steps)) }
-            if (result is State.Success) {
-                reducer.sendResult(AddRecipeUIResult.SaveRecipe())
-            } else {
-                reducer.sendResult(AddRecipeUIResult.Error(UIRecipeErrorCode.SAVE_RECIPE_DB_ERROR))
+            when (result) {
+                is State.Success -> reducer.sendResult(AddRecipeUIResult.SaveRecipe())
+                is State.Error -> reducer.sendResult(AddRecipeUIResult.Error(result.errorCode))
+                else -> {}
             }
         }
     }
@@ -83,7 +87,7 @@ class AddRecipeScreenViewModel(
         override fun reduce(oldState: AddRecipeState, result: AddRecipeUIResult) {
             when (result) {
                 is AddRecipeUIResult.SaveRecipe -> {
-                    setState(AddRecipeState.empty())
+                    setState(AddRecipeState.default())
                 }
                 is AddRecipeUIResult.Error -> {
                     setState(oldState.copy(uiState = State.Error(result.errorCode)))
@@ -103,12 +107,16 @@ class AddRecipeScreenViewModel(
                     }
                 }
                 is AddRecipeUIEvent.UpdateStep -> {
-                    val idx = state.value.steps.indexOfFirst { it.title == state.value.currentStep.title }
-                    if (idx == -1) {
+                    if (event.updateAt < 0 || event.updateAt >= oldState.steps.size) {
                         setState(oldState.copy(uiState = State.Error(UIRecipeErrorCode.UPDATE_STEP_NOT_FOUND)))
                     } else {
+                        val currentStep = oldState.steps[event.updateAt]
+                        val newStep = RecipeStep(
+                            title = event.title ?: currentStep.title,
+                            body = event.body ?: currentStep.body
+                        )
                         val newSteps = state.value.steps.toMutableList()
-                        newSteps[idx] = state.value.currentStep
+                        newSteps[event.updateAt] = newStep
                         setState(oldState.copy(steps = newSteps))
                     }
                 }
@@ -121,24 +129,22 @@ class AddRecipeScreenViewModel(
                     }
                 }
                 is AddRecipeUIEvent.InsertStep -> {
-                    val insertAt = event.insertAt
-                    if (insertAt != null && (insertAt < 0 || insertAt > state.value.steps.size)) {
-                        setState(oldState.copy(uiState = State.Error(UIRecipeErrorCode.INSERT_STEP_OUT_OF_BOUNDS)))
-                        return
+                    with (state.value) {
+                        val insertAt = event.insertAt
+                        if (insertAt != null && (insertAt < 0 || insertAt > steps.size)) {
+                            setState(oldState.copy(uiState = State.Error(UIRecipeErrorCode.INSERT_STEP_OUT_OF_BOUNDS)))
+                            return
+                        }
+                        val newSteps = if (insertAt == null) {
+                            steps + currentStep
+                        } else {
+                            steps.subList(0, insertAt) + currentStep + steps.subList(insertAt, steps.size)
+                        }
+                        setState(oldState.copy(
+                            steps = newSteps,
+                            currentStep = RecipeStep.empty()
+                        ))
                     }
-                    if (state.value.steps.find { it.title == state.value.currentStep.title } != null) {
-                        setState(oldState.copy(uiState = State.Error(UIRecipeErrorCode.INSERT_STEP_DUPLICATE)))
-                        return
-                    }
-                    val newSteps = if (insertAt == null) {
-                        state.value.steps + state.value.currentStep
-                    } else {
-                        state.value.steps.subList(0, insertAt) + state.value.currentStep + state.value.steps.subList(insertAt, state.value.steps.size)
-                    }
-                    setState(oldState.copy(
-                        steps = newSteps,
-                        currentStep = RecipeStep.empty()
-                    ))
                 }
                 AddRecipeUIEvent.SaveRecipe -> {}
             }
