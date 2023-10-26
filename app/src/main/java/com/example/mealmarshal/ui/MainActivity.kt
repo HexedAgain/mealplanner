@@ -1,10 +1,7 @@
 package com.example.mealmarshal.ui
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -15,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,7 +20,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.DialogProperties
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
@@ -34,10 +29,8 @@ import com.example.core.ui.theme.GeneralUISchemeLight
 import com.example.core.ui.theme.LocalGeneralUITheme
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
-import javax.inject.Inject
 
 //@AndroidEntryPoint
 class MainActivity : ComponentActivity() {

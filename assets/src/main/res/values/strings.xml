@@ -9,5 +9,7 @@
     <string name="lab_screen_title">Laboratory</string>
     <string name="add_new_recipe">Add New Recipe</string>
 
+    <string name="add_recipe_screen_title">Add Recipe</string>
+
     <string name="content_desc_back_arrow">Back Arrow</string>
 </resources>

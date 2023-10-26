@@ -15,8 +15,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.core.ui.ThemedAppBarScreen
 import com.example.core.ui.UIEventStateHandler
 import com.example.domain.recipe.model.RecipeStep
+import com.example.lab.ui.theme.LocalAddRecipeScreenTheme
 import com.example.lab.viewmodel.AddRecipeScreenViewModel
 import com.example.lab.viewmodel.AddRecipeState
 import com.example.lab.viewmodel.AddRecipeStateEventHandler
@@ -25,6 +27,17 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewModel()) {
+    val state = addRecipeScreenViewModel.state.collectAsState().value
+    val theme = LocalAddRecipeScreenTheme.current
+    ThemedAppBarScreen(
+        titleResId = theme.text.title
+    ) {
+        RecipeList()
+    }
+}
+
+@Composable
+fun RecipeList(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinViewModel()) {
     val state = addRecipeScreenViewModel.state.collectAsState().value
     Box(
         modifier = Modifier.fillMaxSize(),
