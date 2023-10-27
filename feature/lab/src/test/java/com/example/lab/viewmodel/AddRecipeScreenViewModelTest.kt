@@ -91,7 +91,7 @@ class AddRecipeScreenViewModelTest: KoinTest, KoinMainDispatcherSpec() {
                         }
                     }
                 }
-                "otherwise it replaces the field specified in the step update for the step at the passed index" - {
+                "otherwise it replaces the field specified in the step update for the step at the passed index" {
                     setupViewModel(initialState = emptyState.copy(
                         steps = listOf(RecipeStepMocks.recipeStep, RecipeStepMocks.otherRecipeStep, RecipeStepMocks.yetAnotherRecipeStep)
                     ))
