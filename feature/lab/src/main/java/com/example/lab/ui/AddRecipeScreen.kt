@@ -41,7 +41,6 @@ fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinVie
         is State.Error -> {
             val uiNotification: UINotification = koinInject()
             uiNotification.postDismissableError(
-//                scope = addRecipeScreenViewModel.viewModelScope,
                 errorCode = uiState.errorCode,
                 onDismissed = {
                     addRecipeScreenViewModel.postEvent(AddRecipeUIEvent.DismissError)

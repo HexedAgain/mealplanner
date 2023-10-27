@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.core.ui.ThemedAppBarScreen
 import com.example.recipes.ui.theme.LocalRecipeScreenTheme
+import com.example.recipes.viewmodel.ListRecipesEvent
 import com.example.recipes.viewmodel.RecipesViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -13,6 +14,6 @@ fun RecipesScreen(recipesViewModel: RecipesViewModel = koinViewModel()) {
     ThemedAppBarScreen(
         titleResId = theme.text.recipeScreenTitle,
     ) {
-
+        recipesViewModel.postEvent(ListRecipesEvent.FetchRecipes())
     }
 }

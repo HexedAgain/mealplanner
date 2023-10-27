@@ -10,7 +10,7 @@
     <string name="add_new_recipe">Add New Recipe</string>
     <string name="add_new_recipe_recipe_title">Recipe Title</string>
     <string name="add_new_recipe_step_title">Step Title</string>
-    <string name="add_new_recipe_step_body">Step Title</string>
+    <string name="add_new_recipe_step_body">Step Body</string>
 
     <string name="add_recipe_screen_title">Add Recipe</string>
 

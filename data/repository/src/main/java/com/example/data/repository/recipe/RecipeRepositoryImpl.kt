@@ -15,8 +15,10 @@ class RecipeRepositoryImpl(
 ): RecipeRepository {
     override suspend fun getRecipesLocally(): List<DbRecipeWithSteps> {
         // FIXME - need some general machinery to catch exceptions and run this on the io thread
-        val results = recipeDao.getRecipes(100)
-        return results
+        return withContext(ioDispatcher) {
+            val results = recipeDao.getRecipes(100)
+            results
+        }
     }
 
     override suspend fun insertRecipe(

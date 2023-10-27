@@ -9,7 +9,6 @@ interface UINotification {
     interface UIEvent
     data class UIError(
         val actionAsDismiss: Boolean = false,
-        val scope: CoroutineScope? = null,
         val errorCode: ErrorCode?,
         val actionResId: Int? = null,
         val onAction: () -> Unit = {},
@@ -29,7 +28,6 @@ interface UINotification {
     )
 
     fun postDismissableError(
-        scope: CoroutineScope? = null,
         errorCode: ErrorCode,
         onDismissed: () -> Unit
     )
