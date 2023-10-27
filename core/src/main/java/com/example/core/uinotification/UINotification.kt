@@ -15,7 +15,7 @@ interface UINotification {
         val onAction: () -> Unit = {},
         val onDismissed: () -> Unit = {}
     ): UIEvent
-    data class DismissError(
+    data class DismissSnackbar(
         val uniqueId: String = UUID.randomUUID().toString()
     ): UIEvent
 

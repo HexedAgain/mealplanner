@@ -28,6 +28,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.*
+import com.example.core.error.GenericErrorCode
 import com.example.core.navigation.BottomNavigationItem
 import com.example.core.navigation.ListenForNavigationEvents
 import com.example.core.navigation.NavScreen
@@ -35,6 +36,8 @@ import com.example.core.navigation.Navigator
 import com.example.core.ui.theme.GeneralUISchemeLight
 import com.example.core.ui.theme.LocalGeneralUITheme
 import com.example.core.uinotification.UINotification
+import com.example.assets.R
+import com.example.mealmarshal.ui.errorstrings.ErrorMapping
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -71,20 +74,20 @@ fun ListenForErrors(snackbarHostState: SnackbarHostState) {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         uiNotification.event.collect { event ->
-            var lastError: UINotification.UIError? = null
             when(event) {
                 is UINotification.UIError -> {
-                    lastError = event
                     val actionResId = event.actionResId
                     val actionLabel = when {
-                        event.actionAsDismiss -> "DISMISS"
+                        event.actionAsDismiss -> context.getString(R.string.snackbar_dismiss)
                         actionResId == null -> null
                         else -> context.getString(actionResId)
                     }
-                    (event.scope ?: CoroutineScope(Dispatchers.Main)).launch {
+                    // Prevent blocking on showSnackbar so that we can respond to early dismiss events
+                    CoroutineScope(Dispatchers.Main).launch {
                         val response: SnackbarResult = snackbarHostState.showSnackbar(
-                            message = "some message: ${event.errorCode}",
-                            actionLabel = actionLabel
+                            message = ErrorMapping.getErrorString(context, event.errorCode ?: GenericErrorCode.UNKNOWN_ERROR),
+                            actionLabel = actionLabel,
+                            duration = SnackbarDuration.Long
                         )
                         if (response == SnackbarResult.Dismissed) {
                             event.onDismissed.invoke()
@@ -94,9 +97,7 @@ fun ListenForErrors(snackbarHostState: SnackbarHostState) {
                         }
                     }
                 }
-                // FIXME - this isn't working ... maybe I could have a method in the screen itself to listen for these errors
-                //         on navigating back, that would cancel the scope and then cancel the error
-                is UINotification.DismissError -> {
+                is UINotification.DismissSnackbar -> {
                     snackbarHostState.currentSnackbarData?.dismiss()
                 }
                 else -> {}

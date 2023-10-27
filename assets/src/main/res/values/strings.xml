@@ -15,4 +15,23 @@
     <string name="add_recipe_screen_title">Add Recipe</string>
 
     <string name="content_desc_back_arrow">Back Arrow</string>
+
+    <string name="snackbar_dismiss">DISMISS</string>
+    <string name="error_generic">Something went wrong %s</string>
+    <string name="error_edit_recipe_step_oob">Something went wrong with editing step (out of bounds)</string>
+    <string name="error_insert_recipe_step_oob">Something went wrong with inserting step (out of bounds)</string>
+    <string name="error_update_recipe_step_oob">Something went wrong updating step (not found)</string>
+    <string name="error_delete_recipe_step_oob">Something went wrong deleting step (not found)</string>
+    <string name="error_save_recipe_duplicate_step">Step titles need to be distinct for a recipe</string>
+    <string name="error_save_recipe_no_recipe">You have not created a recipe to save</string>
+    <string name="error_save_recipe_no_steps">Cannot save recipe with no steps</string>
+    <string name="error_save_recipe_incomplete_step">At least one step is only partially filled in</string>
+<!--    INSERT_STEP_OUT_OF_BOUNDS,-->
+<!--    EDIT_STEP_OUT_OF_BOUNDS,-->
+<!--    UPDATE_STEP_NOT_FOUND,-->
+<!--    DELETE_STEP_NOT_FOUND,-->
+<!--    SAVE_RECIPE_DUPLICATE_STEP,-->
+<!--    SAVE_RECIPE_NO_STEPS,-->
+<!--    SAVE_RECIPE_NO_RECIPE,-->
+<!--    SAVE_RECIPE_INCOMPLETE_STEP,-->
 </resources>

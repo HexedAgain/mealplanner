@@ -38,6 +38,6 @@ class UINotificationImpl: UINotification {
     }
 
     override fun dismissSnackbar() {
-        _event.value = UINotification.DismissError()
+        _event.value = UINotification.DismissSnackbar()
     }
 }

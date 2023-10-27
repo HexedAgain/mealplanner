@@ -9,6 +9,10 @@ enum class DatabaseErrorCode: ErrorCode {
     FETCH_ERROR
 }
 
+enum class GenericErrorCode: ErrorCode {
+    UNKNOWN_ERROR
+}
+
 enum class UIRecipeErrorCode: ErrorCode {
     INSERT_STEP_OUT_OF_BOUNDS,
     EDIT_STEP_OUT_OF_BOUNDS,
