@@ -11,11 +11,13 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import com.example.core.state.State
 import com.example.core.ui.CollapsableThemedAppBarScreen
 import com.example.core.ui.ThemedActionButton
@@ -27,6 +29,7 @@ import com.example.lab.viewmodel.AddRecipeScreenViewModel
 import com.example.lab.viewmodel.AddRecipeState
 import com.example.lab.viewmodel.AddRecipeStateEventHandler
 import com.example.lab.viewmodel.event.AddRecipeUIEvent
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
@@ -37,12 +40,15 @@ fun AddRecipeScreen(addRecipeScreenViewModel: AddRecipeScreenViewModel = koinVie
     when(uiState) {
         is State.Error -> {
             val uiNotification: UINotification = koinInject()
-            uiNotification.postDismissableError(
-                errorCode = uiState.errorCode,
-                onDismissed = {
-                    addRecipeScreenViewModel.postEvent(AddRecipeUIEvent.DismissError)
-                }
-            )
+            LaunchedEffect(uiState) {
+                uiNotification.postDismissableError(
+                    scope = addRecipeScreenViewModel.viewModelScope,
+                    errorCode = uiState.errorCode,
+                    onDismissed = {
+                        addRecipeScreenViewModel.postEvent(AddRecipeUIEvent.DismissError)
+                    }
+                )
+            }
         }
         else -> {}
     }

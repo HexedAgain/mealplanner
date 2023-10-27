@@ -1,6 +1,7 @@
 package com.example.core.uinotification
 
 import com.example.core.error.ErrorCode
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -23,10 +24,12 @@ class UINotificationImpl: UINotification {
     }
 
     override fun postDismissableError(
+        scope: CoroutineScope?,
         errorCode: ErrorCode,
         onDismissed: () -> Unit
     ) {
         _event.value = UINotification.UIError(
+            scope = scope,
             actionAsDismiss = true,
             errorCode = errorCode,
             onAction = onDismissed,

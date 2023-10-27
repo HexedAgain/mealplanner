@@ -37,6 +37,9 @@ import com.example.core.ui.theme.LocalGeneralUITheme
 import com.example.core.uinotification.UINotification
 import com.example.mealmarshal.ui.theme.MealMarshalTheme
 import com.example.mealmarshal.viewmodel.MainScreenViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -54,7 +57,6 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-//                        MainActivityScaffold(navigator = navigator)
                         MainScaffold(navigator = navigator)
                     }
                 }
@@ -65,7 +67,6 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun ListenForErrors(snackbarHostState: SnackbarHostState) {
-    // We need to be posting the errors somewhere, and then for this guy to be collecting them
     val uiNotification: UINotification = koinInject()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
@@ -80,15 +81,17 @@ fun ListenForErrors(snackbarHostState: SnackbarHostState) {
                         actionResId == null -> null
                         else -> context.getString(actionResId)
                     }
-                    val response: SnackbarResult = snackbarHostState.showSnackbar(
-                        message = "some message: ${event.errorCode}",
-                        actionLabel = actionLabel
-                    )
-                    if (response == SnackbarResult.Dismissed) {
-                        event.onDismissed.invoke()
-                    }
-                    if (response == SnackbarResult.ActionPerformed) {
-                        event.onAction.invoke()
+                    (event.scope ?: CoroutineScope(Dispatchers.Main)).launch {
+                        val response: SnackbarResult = snackbarHostState.showSnackbar(
+                            message = "some message: ${event.errorCode}",
+                            actionLabel = actionLabel
+                        )
+                        if (response == SnackbarResult.Dismissed) {
+                            event.onDismissed.invoke()
+                        }
+                        if (response == SnackbarResult.ActionPerformed) {
+                            event.onAction.invoke()
+                        }
                     }
                 }
                 // FIXME - this isn't working ... maybe I could have a method in the screen itself to listen for these errors
@@ -97,28 +100,6 @@ fun ListenForErrors(snackbarHostState: SnackbarHostState) {
                     snackbarHostState.currentSnackbarData?.dismiss()
                 }
                 else -> {}
-            }
-            event?.let {
-//                when ()
-//                if (error is UINotification.UIError) {
-//                    val actionResId = error.actionResId
-//                    val actionLabel = when {
-//                        error.actionAsDismiss -> "DISMISS"
-//                        actionResId == null -> null
-//                        else -> context.getString(actionResId)
-//                    }
-//                    val response: SnackbarResult = snackbarHostState.showSnackbar(
-//                        message = "some message: ${error.errorCode}",
-//                        actionLabel = actionLabel
-//                    )
-//                    if (response == SnackbarResult.Dismissed) {
-//                        error.onDismissed.invoke()
-//                    }
-//                    if (response == SnackbarResult.ActionPerformed) {
-//                        error.onAction.invoke()
-//                    }
-//                } else {
-//                }
             }
         }
     }
